@@ -17,6 +17,8 @@ DSH 在创建新会话前选择 preset。`wuji` 的 standing composition 只会�
 
 ## 安装
 
+安装器会先写入 `$DSH_HOME/backups/wuji-mode/<timestamp>/`，将新 package 和 preset 写入临时目录，全部复制成功后再替换目标目录；复制失败时不会提交半套安装。它不修改用户 YAML patch，也不改默认 preset。
+
 在本仓库根目录运行：
 
 ```powershell

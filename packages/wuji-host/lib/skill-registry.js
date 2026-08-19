@@ -5,6 +5,15 @@ import { fileURLToPath } from 'node:url';
 
 const registryPath = fileURLToPath(new URL('./capability-registry.json', import.meta.url));
 
+export const ADMITTED_LIFECYCLES = new Set(['behavior-verified', 'primary']);
+
+export function admitCapability(cap, { platform = process.platform, availableEntrypoints = new Set() } = {}) {
+  if (!cap || !ADMITTED_LIFECYCLES.has(cap.lifecycle)) return { admitted: false, reason: 'lifecycle-not-verified' };
+  if (Array.isArray(cap.platforms) && !cap.platforms.includes(platform)) return { admitted: false, reason: 'platform-incompatible' };
+  if (cap.entrypoint?.startsWith('plugin:') && !availableEntrypoints.has(cap.entrypoint)) return { admitted: false, reason: 'entrypoint-unavailable' };
+  return { admitted: true };
+}
+
 function skillContent(cap) {
   return [
     `# ${cap.id}`,
@@ -29,6 +38,8 @@ export default {
       console.error('[wuji] capability registry load failed:', e.message);
     }
     for (const cap of registry.capabilities || []) {
+      const admission = admitCapability(cap);
+      if (!admission.admitted) continue;
       ctx.skills.register({
         name: cap.id,
         description: `${cap.domain} · ${cap.commander} · ${cap.triggers.join('/')}`,

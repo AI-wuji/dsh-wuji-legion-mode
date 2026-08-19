@@ -19,18 +19,31 @@ if (-not (Test-Path (Join-Path $sourcePackage 'package.json'))) { throw "wuji-ho
 if (-not (Test-Path (Join-Path $presetSource 'agent.cordis.yml'))) { throw "Wuji preset composition not found: $presetSource" }
 if (-not (Test-Path $profileDir)) { throw "DSH profile not found: $profileDir" }
 
-# Install the package for preset composition resolution only. It is deliberately
-# absent from the Desktop patch, so other presets never receive wuji_* tools.
-New-Item -ItemType Directory -Force -Path $packageTarget | Out-Null
-Copy-Item (Join-Path $sourcePackage 'package.json') $packageTarget -Force
-Copy-Item (Join-Path $sourcePackage 'lib') (Join-Path $packageTarget 'lib') -Recurse -Force
-if (Test-Path (Join-Path $packageTarget 'test')) { Remove-Item -LiteralPath (Join-Path $packageTarget 'test') -Recurse -Force }
+# Stage all writes first and preserve prior installations for rollback.
+$backupRoot = Join-Path $DshHome 'backups\wuji-mode'
+$stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+$backup = Join-Path $backupRoot $stamp
+New-Item -ItemType Directory -Force -Path $backup | Out-Null
+if (Test-Path $packageTarget) { Copy-Item $packageTarget (Join-Path $backup 'wuji-host') -Recurse -Force }
+if (Test-Path $presetTarget) { Copy-Item $presetTarget (Join-Path $backup 'preset') -Recurse -Force }
+$stage = Join-Path $DshHome ".tmp\wuji-mode-$stamp"
+$stagePackage = Join-Path $stage 'package'
+$stagePreset = Join-Path $stage 'preset'
+New-Item -ItemType Directory -Force -Path $stagePackage,$stagePreset | Out-Null
+Copy-Item (Join-Path $sourcePackage 'package.json') $stagePackage -Force
+Copy-Item (Join-Path $sourcePackage 'lib') (Join-Path $stagePackage 'lib') -Recurse -Force
+Copy-Item (Join-Path $presetSource 'agent.cordis.yml') $stagePreset -Force
+Copy-Item (Join-Path $presetSource 'preset.yml') $stagePreset -Force
+Copy-Item (Join-Path $repo 'skills') (Join-Path $stagePreset 'skills') -Recurse -Force
 
-# DSH discovers user presets from $DSH_HOME/.agent-presets on every roster read.
-New-Item -ItemType Directory -Force -Path $presetTarget | Out-Null
-Copy-Item (Join-Path $presetSource 'agent.cordis.yml') $presetTarget -Force
-Copy-Item (Join-Path $presetSource 'preset.yml') $presetTarget -Force
-Copy-Item (Join-Path $repo 'skills') (Join-Path $presetTarget 'skills') -Recurse -Force
+# Commit staged directories only after every source copy succeeds.
+New-Item -ItemType Directory -Force -Path (Split-Path $packageTarget) | Out-Null
+New-Item -ItemType Directory -Force -Path (Split-Path $presetTarget) | Out-Null
+if (Test-Path $packageTarget) { Remove-Item $packageTarget -Recurse -Force }
+if (Test-Path $presetTarget) { Remove-Item $presetTarget -Recurse -Force }
+Move-Item $stagePackage $packageTarget
+Move-Item $stagePreset $presetTarget
+Remove-Item $stage -Recurse -Force
 
 if ($RemoveLegacyWujiPatch) {
   throw 'Automatic legacy patch surgery is intentionally unsupported: it can damage unrelated user rows. Remove the legacy agent-presets.default: wuji and wuji-host rows manually, or restore your profile patch backup, then rerun this installer.'
