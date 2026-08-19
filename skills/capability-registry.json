@@ -1,0 +1,258 @@
+{
+    "version":  "0.2.0",
+    "policy":  "能力注册表（Capability Registry）。这是无极军团的技能清单数据源——每条登记一个能力，含触发词、入口、归属主帅、生命周期、验证探针。参谋部的 capability-mount 在此清单上做确定性路由。",
+    "capabilities":  [
+                         {
+                             "id":  "feishu-doc",
+                             "domain":  "feishu",
+                             "commander":  "情报主帅",
+                             "triggers":  [
+                                              "飞书文档",
+                                              "文档",
+                                              "docx",
+                                              "云文档",
+                                              "feishu doc"
+                                          ],
+                             "entrypoint":  "skill:lark-doc",
+                             "lifecycle":  "behavior-verified",
+                             "verify":  "官方 lark-cli 已装",
+                             "fallback":  "lark-openapi-explorer",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "feishu-sheets",
+                             "domain":  "feishu",
+                             "commander":  "数据主帅",
+                             "triggers":  [
+                                              "飞书表格",
+                                              "电子表格",
+                                              "sheet",
+                                              "表格",
+                                              "excel"
+                                          ],
+                             "entrypoint":  "skill:lark-sheets",
+                             "lifecycle":  "behavior-verified",
+                             "verify":  "官方 lark-cli 已装",
+                             "fallback":  "lark-openapi-explorer",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "feishu-im",
+                             "domain":  "feishu",
+                             "commander":  "情报主帅",
+                             "triggers":  [
+                                              "发消息",
+                                              "发群",
+                                              "飞书消息",
+                                              "群聊",
+                                              "im"
+                                          ],
+                             "entrypoint":  "skill:lark-im",
+                             "lifecycle":  "behavior-verified",
+                             "verify":  "官方 lark-cli 已装",
+                             "fallback":  "lark-openapi-explorer",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "presentation-html",
+                             "domain":  "presentation",
+                             "commander":  "视觉主帅",
+                             "triggers":  [
+                                              "ppt",
+                                              "幻灯片",
+                                              "演示",
+                                              "presentation",
+                                              "做演示",
+                                              "html演示"
+                                          ],
+                             "entrypoint":  "skill:dashi-ppt",
+                             "lifecycle":  "behavior-verified",
+                             "verify":  "本机已装",
+                             "fallback":  "visual 域原生能力",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "presentation-editable",
+                             "domain":  "presentation",
+                             "commander":  "视觉主帅",
+                             "triggers":  [
+                                              "可编辑ppt",
+                                              "pptx",
+                                              "可编辑演示",
+                                              "editable ppt"
+                                          ],
+                             "entrypoint":  "plugin:wuji-editable-deck",
+                             "lifecycle":  "callable",
+                             "verify":  "待融合重生后 behavior-verified",
+                             "fallback":  "presentation-html",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "code-dev",
+                             "domain":  "code",
+                             "commander":  "开发主帅",
+                             "triggers":  [
+                                              "写代码",
+                                              "开发",
+                                              "实现",
+                                              "bug修复",
+                                              "refactor",
+                                              "implement",
+                                              "code"
+                                          ],
+                             "entrypoint":  "native coding",
+                             "lifecycle":  "behavior-verified",
+                             "verify":  "DSH 原生 + superpowers/ponytail/addyosmani",
+                             "fallback":  "DSH 原生代码能力",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "search-web",
+                             "domain":  "search",
+                             "commander":  "情报主帅",
+                             "triggers":  [
+                                              "搜索",
+                                              "检索",
+                                              "调研",
+                                              "全网",
+                                              "research",
+                                              "search"
+                                          ],
+                             "entrypoint":  "wuji_intelligence_search → DSH web.search；情报官只收集，参谋部分析",
+                             "lifecycle":  "behavior-verified",
+                             "verify":  "Marco-DeepResearch benchmark 背书",
+                             "fallback":  "DSH 原生 web 搜索",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "writing",
+                             "domain":  "writing",
+                             "commander":  "内容主帅",
+                             "triggers":  [
+                                              "写文案",
+                                              "写作",
+                                              "营销",
+                                              "copywriting",
+                                              "文章"
+                                          ],
+                             "entrypoint":  "skill:内容主帅（khazix/baoyu 蒸馏）",
+                             "lifecycle":  "callable",
+                             "verify":  "待融合重生后 behavior-verified",
+                             "fallback":  "DSH 原生写作能力",
+                             "source":  "DSH-native-or-user-configured",
+                             "compatibility":  [
+                                                   "DeepSeek Harness"
+                                               ],
+                             "rollback":  "disable-registry-entry-and-restore-previous-version",
+                             "risk":  "normal"
+                         },
+                         {
+                             "id":  "vision-bridge",
+                             "domain":  "vision",
+                             "commander":  "视觉主帅",
+                             "triggers":  [
+                                              "图片",
+                                              "截图",
+                                              "识图",
+                                              "OCR",
+                                              "视觉",
+                                              "image",
+                                              "screenshot"
+                                          ],
+                             "entrypoint":  "dsh-vision-router@1.5.3 → built-in vision tools / Auto Vision route",
+                             "lifecycle":  "behavior-verified",
+                             "verify":  "dsh-vision-router v1.5.3; MIT; 368 tests advertised; source and security docs reviewed",
+                             "fallback":  "current model native image input",
+                             "source":  "ysr666/dsh-vision-router",
+                             "compatibility":  [
+                                                   "DeepSeek Harness desktop",
+                                                   "text-only model fallback"
+                                               ],
+                             "rollback":  "remove desktop profile plugin entry and restore previous package",
+                             "risk":  "image-content-untrusted; built-in remote vision chain has rate/privacy limits"
+                         },
+                         {
+                             "id":  "browser-control",
+                             "domain":  "browser",
+                             "commander":  "视觉主帅",
+                             "triggers":  [
+                                              "浏览器",
+                                              "网页",
+                                              "打开网页",
+                                              "点击网页",
+                                              "browser",
+                                              "web automation"
+                                          ],
+                             "entrypoint":  "official Microsoft Playwright MCP via DSH MCP client",
+                             "lifecycle":  "callable",
+                             "verify":  "Microsoft Playwright MCP 36K+ stars, Apache-2.0; desktop patch verified",
+                             "fallback":  "report unavailable and request explicit browser provider",
+                             "source":  "microsoft/playwright-mcp",
+                             "compatibility":  [
+                                                   "DeepSeek Harness desktop",
+                                                   "Microsoft Edge",
+                                                   "Node/npx"
+                                               ],
+                             "rollback":  "remove playwright-browser row from desktop patch",
+                             "risk":  "high; navigation/click/fill/download can cause external side effects"
+                         },
+                         {
+                             "id":  "comfyui-control",
+                             "domain":  "visual",
+                             "commander":  "视觉主帅",
+                             "triggers":  [
+                                              "ComfyUI",
+                                              "工作流",
+                                              "队列",
+                                              "生成图片",
+                                              "生成视频",
+                                              "comfy"
+                                          ],
+                             "entrypoint":  "local ComfyUI HTTP API (configurable endpoint, default 127.0.0.1:8898)",
+                             "lifecycle":  "callable",
+                             "verify":  "endpoint probe required at execution time",
+                             "fallback":  "start local ComfyUI only with explicit user authorization",
+                             "source":  "ComfyUI-native API",
+                             "compatibility":  [
+                                                   "Windows local bundle"
+                                               ],
+                             "rollback":  "cancel queue/disable registry",
+                             "risk":  "high; generation consumes GPU and writes files"
+                         }
+                     ]
+}

@@ -1,0 +1,3 @@
+import {createWujiStaffService} from '@wuji/dsh-wuji-host';
+const s=createWujiStaffService();const tasks=[{taskId:'a',deps:[],assignedTo:'x',requirement:'a',input:'i',output:'o',returnFormat:'json',failurePolicy:'retry'},{taskId:'b',deps:['a'],assignedTo:'y',requirement:'b',input:'i',output:'o',returnFormat:'json',failurePolicy:'report'}];
+const v=s.validatePlan({objective:'x',tasks});if(v.taskCount!==2)process.exit(1);if(s.readyTasks([{...tasks[0],status:'success'},{...tasks[1],status:'pending'}])[0].taskId!=='b')process.exit(1);let cycle=false;try{s.validatePlan({objective:'x',tasks:tasks.map(x=>({...x,deps:x.taskId==='a'?['b']:['a']}))})}catch{cycle=true}if(!cycle)process.exit(1);console.log('staff service test OK');

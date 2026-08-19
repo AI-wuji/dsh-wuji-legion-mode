@@ -1,0 +1,13 @@
+// Wuji Legion · 生命周期、可观测性与反馈（P5）
+import { z } from 'zod';
+export const telemetrySchema=z.object({task:z.object({pending:z.number(),running:z.number(),success:z.number(),failed:z.number()}),feedback:z.array(z.object({rating:z.enum(['good','bad','neutral']),note:z.string(),evidence:z.string(),time:z.number()})),version:z.number()});
+export const telemetryInit=()=>({task:{pending:0,running:0,success:0,failed:0},feedback:[],version:0});
+export function applyTelemetry(s,e){
+  if(e.type==='wuji/task/status'){const status=e.data.status;if(!(status in s.task))return s;return{...s,task:{...s.task,[status]:s.task[status]+1},version:s.version+1}}
+  if(e.type==='wuji/task/change')return{...s,task:{...s.task,pending:s.task.pending+1},version:s.version+1};
+  if(e.type==='wuji/feedback'){const item={rating:e.data.rating,note:e.data.note,evidence:e.data.evidence,time:e.time||Date.now()};return{...s,feedback:[...s.feedback,item].slice(-64),version:s.version+1}}
+  return s;
+}
+export const telemetryProjection={key:'wuji.telemetry',schema:telemetrySchema,init:telemetryInit,apply:applyTelemetry,view:s=>s,stateVersion:1};
+export const feedbackTool={name:'wuji_feedback_record',description:'记录用户对本次交付的结构化反馈和证据，供记忆与进化使用；不自动改能力。',parameters:{type:'object',properties:{rating:{type:'string',enum:['good','bad','neutral']},note:{type:'string'},evidence:{type:'string'}},required:['rating','note','evidence']},output:{schema:{type:'object'},render(_a,v){return[{type:'text',text:JSON.stringify(v)}]}},async execute(args,exec){if(!exec.agent?.session)throw new Error('反馈必须归属于 Session');exec.agent.session.append('wuji/feedback',args);return{status:'recorded',rating:args.rating}}};
+export function createStatusTool(sessionProjections,tokenMeter){return{name:'wuji_status',description:'读取当前 Session 的无极军团投影状态摘要和上下文压力。',parameters:{type:'object',properties:{},required:[]},output:{schema:{type:'object'},render(_a,v){return[{type:'text',text:JSON.stringify(v,null,2)}]}},isConcurrencySafe(){return true},async execute(_args,exec){if(!exec.agent?.session)throw new Error('状态读取需要 Session');const snap=sessionProjections.snapshot(exec.agent.session);const values=snap.values||{};const pressure=tokenMeter?.measure(exec.agent.session);return{asOfSeq:snap.asOfSeq,keys:Object.keys(values).filter(k=>k.startsWith('wuji.')),task:values['wuji.telemetry']?.task||null,activeRequirement:values['wuji.requirement']?.active?.id||null,activeTask:values['wuji.task']?.active?.taskId||null,contextPressure:pressure?{surfaceTokens:pressure.surfaceTokens,pressureTokens:pressure.pressureTokens,contextWindow:pressure.contextWindow}:null}}}}

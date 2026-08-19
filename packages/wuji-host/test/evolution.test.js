@@ -1,0 +1,5 @@
+import {memoryProjection,evolutionProjection,evolutionProposeTool,evolutionPromoteTool} from '@wuji/dsh-wuji-host';
+let m=memoryProjection.init();for(let i=0;i<20;i++)m=memoryProjection.apply(m,{type:'wuji/memory/write',time:i,data:{tier:'working',key:'k'+i,content:'c',evidence:'e'}});if(m.working.length!==16)process.exit(1);
+const events=[];const session={append(type,data){events.push({type,data})}};const artifact={artifactId:'new-skill',version:1,parents:['a','b'],complementMatrix:[{parent:'a',strength:'s',gap:'g',kept:true}],probe:{name:'probe',passed:true,evidence:'hash'}};
+const c=await evolutionProposeTool.execute({artifact},{agent:{session}});if(c.status!=='candidate')process.exit(1);const p=await evolutionPromoteTool.execute({artifact},{agent:{session}});if(p.status!=='promoted'||events.length!==2)process.exit(1);
+let e=evolutionProjection.init();for(const x of events)e=evolutionProjection.apply(e,{type:x.type,data:x.data});if(e.artifacts[0].status!=='promoted')process.exit(1);console.log('evolution test OK');

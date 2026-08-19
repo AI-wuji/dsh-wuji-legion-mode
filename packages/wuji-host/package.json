@@ -1,0 +1,25 @@
+{
+  "name": "@wuji/dsh-wuji-host",
+  "description": "Wuji Legion host plugin: three-table session projections and capability registry for DeepSeek Harness.",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./projection": {
+      "default": "./lib/projection.js"
+    },
+    "./skill-registry": {
+      "default": "./lib/skill-registry.js"
+    },
+    "./jspace-distill": {
+      "default": "./lib/jspace-distill.js"
+    }
+  },
+  "dependencies": {
+    "zod": "*"
+  },
+  "private": true
+}

@@ -1,0 +1,2 @@
+import {focusTask,bridgeContract,monitorTask} from '@wuji/dsh-wuji-host/jspace-distill';
+const f=focusTask({nodes:[{taskId:'a',status:'pending'},{taskId:'b',status:'running'},{taskId:'c',status:'pending'}]});if(f.active.length!==2||f.overflow!==1)process.exit(1);if(bridgeContract({taskId:'a',output:'draft',returnFormat:'json'}).intermediate!=='draft')process.exit(1);if(!monitorTask({status:'failed',failurePolicy:'report'}).degenerate)process.exit(1);console.log('j-space distill test OK');

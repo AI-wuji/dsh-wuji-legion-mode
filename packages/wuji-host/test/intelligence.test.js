@@ -1,0 +1,2 @@
+import {intelligenceSearchTool} from '@wuji/dsh-wuji-host';
+let seen=null;const toolCtx={get(name){if(name==='web')return{async search(req){seen=req;return{content:'raw',sources:[{url:'https://example.com',title:'source'}],truncated:false}}}}};const result=await intelligenceSearchTool.execute({query:'critic agent',maxResults:5},{agent:{ctx:toolCtx},signal:new AbortController().signal});if(result.content!=='raw'||seen.maxResults!==5||result.sources.length!==1)process.exit(1);console.log('intelligence test OK');

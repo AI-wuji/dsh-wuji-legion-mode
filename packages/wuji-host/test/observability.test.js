@@ -1,0 +1,4 @@
+import {telemetryProjection,feedbackTool,createStatusTool} from '@wuji/dsh-wuji-host';
+let s=telemetryProjection.init();s=telemetryProjection.apply(s,{type:'wuji/task/change',data:{}});s=telemetryProjection.apply(s,{type:'wuji/task/status',data:{status:'success'}});if(s.task.pending!==1||s.task.success!==1)process.exit(1);
+const events=[];const session={append(type,data){events.push({type,data})}};await feedbackTool.execute({rating:'good',note:'ok',evidence:'e1'},{agent:{session}});if(events[0].type!=='wuji/feedback')process.exit(1);
+const tool=createStatusTool({snapshot(){return{asOfSeq:2,values:{'wuji.telemetry':s,'wuji.requirement':{active:{id:'u1'}},'wuji.task':{active:{taskId:'t1'}}}}}});const v=await tool.execute({}, {agent:{session}});if(v.activeTask!=='t1'||v.keys.length!==3)process.exit(1);console.log('observability test OK');
