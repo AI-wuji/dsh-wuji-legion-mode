@@ -163,6 +163,10 @@
   config:
     - id: compaction-basic
       name: '@deepseek-ai/dsh-compaction-basic'
+      config:
+        # DSH default is contextWindow * 0.8. Wuji compacts earlier so the
+        # active surface remains well below the user's observed billing edge.
+        thresholdRatio: 0.4
 
     - id: command-compact
       name: '@deepseek-ai/dsh-command-compact'

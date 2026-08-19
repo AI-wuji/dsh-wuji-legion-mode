@@ -53,6 +53,14 @@ export default {
     });
     ctx.inject(['tools','sessionProjections','tokenMeter'], (statusCtx) => {
       statusCtx.tools.register(createStatusTool(statusCtx.sessionProjections,statusCtx.tokenMeter));
+      // Tool-level hard stop: DSH exposes tools.guard() as a scoped, pre-execute
+      // veto. This protects Wuji's task tools before they add more context.
+      if (typeof statusCtx.tools.guard === 'function') statusCtx.tools.guard((exec) => {
+        const pressure = statusCtx.tokenMeter.measure(exec.agent?.session);
+        const used = pressure?.totalTokens ?? pressure?.surfaceTokens ?? 0;
+        if (used >= 260000) return 'Wuji context budget is exhausted; compact or start a new session before running more tools.';
+        return undefined;
+      });
     });
   },
 };

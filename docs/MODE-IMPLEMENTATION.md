@@ -50,6 +50,12 @@ npm test
 
 测试覆盖投影、参谋部计划与派发、状态工具、主帅、官员、记忆、进化、冷恢复和 preset-scoped mock host 注册。`wuji_staff_dispatch` 只在 child 创建成功后标记任务为 `running` 并返回 `dispatched`；它不会把创建回执伪装为完成证据。终止节点必须调用 `wuji_task_complete`，提供 `artifact` 和 `evidence` 后才会写入 `success` 或 `failed`。
 
+## 上下文预算
+
+DSH 内置 `dsh-compaction-basic` 的源码默认 `thresholdRatio` 为 `0.8`（即 `contextWindow × 0.8`）。本模式在 preset 中将其提前配置为 `0.4`，并在 `tools/pre-execute` 支持的 `tools.guard()` 上设置 260000 token 的工具执行硬门禁。`wuji_status` 会返回 `budget`：220000 为 near-limit，240000 为 compact-required，260000 为 blocked。
+
+这些数值是本项目的保护策略，不是对服务商“270K 双倍计费”规则的官方断言；计费规则仍需以服务商账单或官方计费文档为准。
+
 ## 当前边界
 
 - 模式选择影响**新会话**；DSH 原生禁止已开始会话换 preset。
