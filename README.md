@@ -14,6 +14,10 @@
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT">
 </p>
 
+<p align="center">
+  <a href="./index.zh.html">中文 HTML 展示页</a> · <a href="./index.html">English HTML Showcase</a>
+</p>
+
 ---
 
 ## 🎯 一句话 / One-Liner
