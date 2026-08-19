@@ -48,7 +48,7 @@ npm install
 npm test
 ```
 
-测试覆盖投影、参谋部计划与派发、状态工具、主帅、官员、记忆、进化、冷恢复和 preset-scoped mock host 注册。`wuji_staff_dispatch` 只在 child 创建成功后标记任务为 `running` 并返回 `dispatched`；它不会把创建回执伪装为完成证据。
+测试覆盖投影、参谋部计划与派发、状态工具、主帅、官员、记忆、进化、冷恢复和 preset-scoped mock host 注册。`wuji_staff_dispatch` 只在 child 创建成功后标记任务为 `running` 并返回 `dispatched`；它不会把创建回执伪装为完成证据。终止节点必须调用 `wuji_task_complete`，提供 `artifact` 和 `evidence` 后才会写入 `success` 或 `failed`。
 
 ## 当前边界
 

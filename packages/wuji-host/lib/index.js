@@ -8,7 +8,7 @@ import {
   officerAdviceProjection,
 } from './projection.js';
 import skillRegistryPlugin from './skill-registry.js';
-import staffPlanTool, { staffDispatchTool } from './staff.js';
+import staffPlanTool, { staffDispatchTool, staffCompletionTool } from './staff.js';
 import { createWujiStaffService } from './staff-service.js';
 import commanderSelectTool from './commanders.js';
 import officerAdviseTool, { councilPlanTool } from './officers.js';
@@ -41,6 +41,7 @@ export default {
     ctx.inject(['tools'], (toolsCtx) => {
       toolsCtx.tools.register(staffPlanTool);
       toolsCtx.tools.register(staffDispatchTool);
+      toolsCtx.tools.register(staffCompletionTool);
       toolsCtx.tools.register(commanderSelectTool);
       toolsCtx.tools.register(officerAdviseTool);
       toolsCtx.tools.register(councilPlanTool);
@@ -63,6 +64,7 @@ export {
   officerAdviceProjection,
   staffPlanTool,
   staffDispatchTool,
+  staffCompletionTool,
   createWujiStaffService,
   commanderSelectTool,
   officerAdviseTool,
