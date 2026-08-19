@@ -27,7 +27,7 @@ DSH 在创建新会话前选择 preset。`wuji` 的 standing composition 只会�
 
 安装器会：
 
-1. 安装 `@wuji/dsh-wuji-host`，供 preset composition 解析；
+1. 将 `@wuji/dsh-wuji-host` 与 `zod` 安装到 `wuji/node_modules/`，供 preset composition 从自身 base URL 解析；
 2. 安装 `$DSH_HOME/.agent-presets/wuji/` 与 preset-local skills；
 3. **不**修改 `agent-presets.default`；
 4. **不**向 `profiles/desktop/cordis.patch.yml` 插入 `wuji-host`；
