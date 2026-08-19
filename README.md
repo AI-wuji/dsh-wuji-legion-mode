@@ -118,7 +118,7 @@ P4  三层记忆、行为探针与版本化进化                  ✅
 P5  telemetry、反馈与当前 Session 状态摘要          ✅
 ```
 
-> 当前为**私有开发版本**。模式隔离仍需在真实 DSH Desktop 的 profile / mode 切换流程中完成端到端验证；在此之前，不宣称已实现热切换。
+> 当前为**公开开发版本**。模式隔离按 DSH 原生 agent preset 作用域实现：选择 `wuji` 的新会话才挂载军团运行时；DSH 原生规定已开始会话固定 preset，因此不提供也不宣称运行时热切换。安装与验证步骤见 [`docs/MODE-IMPLEMENTATION.md`](docs/MODE-IMPLEMENTATION.md)。
 
 ---
 

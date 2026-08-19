@@ -48,10 +48,11 @@ export const staffPlanTool = {
   isConcurrencySafe() { return false; },
   async execute(args, exec) {
     const tasks = Array.isArray(args.tasks) ? args.tasks : [];
-    const ids = new Set(tasks.map(task => task.taskId));
-    const dependenciesValid = tasks.every(task => task.deps.every(dep => ids.has(dep) || dep === ''));
-    if (!args.objective || tasks.length === 0) throw new Error('参谋部任务表需要 objective 和至少一个完整任务节点');
-    if (!dependenciesValid) throw new Error('任务依赖必须指向同一任务表中的 taskId');
+    const staff = exec.agent?.ctx?.get('wujiStaff');
+    if (!staff) throw new Error('参谋部服务未挂载');
+    const validated = staff.validatePlan({ objective: args.objective, tasks });
+    const ids = new Set(validated.taskIds);
+    const dependenciesValid = true;
     const session = exec.agent?.session;
     if (!session) throw new Error('参谋部工具必须在一个有归属 Session 的 Agent 中运行');
     for (const task of tasks) {
@@ -108,8 +109,9 @@ export const staffDispatchTool = {
         parent,
         signal: exec.signal,
       });
-      parent.session.append('wuji/task/status', { taskId: task.taskId, status: 'success', evidence: `subagent:${run.childId || run.id || task.taskId}` });
-      return { taskId: task.taskId, status: 'success', childId: run.childId || run.id || null };
+      // start() proves child creation only. Completion requires a later terminal
+      // receipt with artifact/evidence; never claim success here.
+      return { taskId: task.taskId, status: 'dispatched', childId: run.childId || run.id || null };
     } catch (error) {
       parent.session.append('wuji/task/status', { taskId: task.taskId, status: 'failed', evidence: error?.message || String(error) });
       throw error;

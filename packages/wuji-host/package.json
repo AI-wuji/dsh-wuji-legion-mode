@@ -18,8 +18,11 @@
       "default": "./lib/jspace-distill.js"
     }
   },
+  "scripts": {
+    "test": "node test/run-all.mjs"
+  },
   "dependencies": {
-    "zod": "*"
+    "zod": "^3.24.2"
   },
   "private": true
 }
