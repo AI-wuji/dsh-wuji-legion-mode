@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="./index.zh.html">中文 HTML 展示页</a> · <a href="./index.html">English HTML Showcase</a>
+  <a href="https://ai-wuji.github.io/dsh-wuji-legion-mode/index.zh.html">中文在线展示页</a> · <a href="https://ai-wuji.github.io/dsh-wuji-legion-mode/">English Online Showcase</a>
 </p>
 
 ---
