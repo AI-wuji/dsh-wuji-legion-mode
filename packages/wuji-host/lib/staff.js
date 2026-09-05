@@ -1,6 +1,21 @@
 // Wuji Legion · 参谋部最小调度工具（P1）
 // 参谋部只做全局任务分配与契约写入，不亲自执行、不创建第二套 agent-loop。
 
+// Workers keep the same minimum-action doctrine even when a host does not
+// prove that child agents inherit the parent preset automatically.
+export const PONYTAIL_WORKER_RULES = [
+  '[Wuji PonyTail worker preflight]',
+  '先读完整流程和调用方；复用已有能力优先。',
+  '标准库/平台原生/已安装能力优先，不新增无请求抽象。',
+  '不得删除安全、授权、错误处理、输入校验或必要验证。',
+  '非平凡逻辑保留一个最小可运行检查，并返回完成证据。',
+].join('\n');
+
+function composeWorkerPrompt(prompt) {
+  const text = String(prompt || '');
+  return text.includes('[Wuji PonyTail worker preflight]') ? text : `${PONYTAIL_WORKER_RULES}\n\n${text}`;
+}
+
 export const staffPlanTool = {
   name: 'wuji_staff_plan',
   description: '参谋部：把已确认需求转换为有依赖、负责人、输入输出和失败策略的任务分配表，并写入 wuji.task 投影。',
@@ -105,7 +120,7 @@ export const staffDispatchTool = {
     try {
       const run = await subagents.start(args.provider, {
         label: `wuji-${task.taskId}`,
-        prompt: args.prompt,
+        prompt: composeWorkerPrompt(args.prompt),
         parent,
         signal: exec.signal,
       });

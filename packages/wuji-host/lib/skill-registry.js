@@ -37,6 +37,7 @@ export default {
     } catch (e) {
       console.error('[wuji] capability registry load failed:', e.message);
     }
+    const ponytailAdapters = registry.ponytailAdapters || {};
     for (const cap of registry.capabilities || []) {
       const admission = admitCapability(cap);
       if (!admission.admitted) continue;
@@ -53,6 +54,9 @@ export default {
           lifecycle: cap.lifecycle,
           verify: cap.verify,
           fallback: cap.fallback,
+          ponytailPreflight: cap.policy?.preflight === 'required',
+          ponytailAdapter: ponytailAdapters[cap.domain] || null,
+          policy: cap.policy || null,
         },
       });
     }

@@ -8,7 +8,7 @@ import {
   officerAdviceProjection,
 } from './projection.js';
 import skillRegistryPlugin from './skill-registry.js';
-import staffPlanTool, { staffDispatchTool, staffCompletionTool } from './staff.js';
+import staffPlanTool, { staffDispatchTool, staffCompletionTool, PONYTAIL_WORKER_RULES } from './staff.js';
 import { createWujiStaffService } from './staff-service.js';
 import commanderSelectTool from './commanders.js';
 import officerAdviseTool, { councilPlanTool } from './officers.js';
@@ -73,6 +73,7 @@ export {
   staffPlanTool,
   staffDispatchTool,
   staffCompletionTool,
+  PONYTAIL_WORKER_RULES,
   createWujiStaffService,
   commanderSelectTool,
   officerAdviseTool,

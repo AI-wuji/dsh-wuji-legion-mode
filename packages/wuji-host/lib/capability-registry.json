@@ -1,6 +1,16 @@
 {
     "version":  "0.2.0",
     "policy":  "能力注册表（Capability Registry）。这是无极军团的技能清单数据源——每条登记一个能力，含触发词、入口、归属主帅、生命周期、验证探针。参谋部的 capability-mount 在此清单上做确定性路由。",
+    "ponytailAdapters":  {
+        "code":  "ponytail-code",
+        "search":  "ponytail-research",
+        "writing":  "ponytail-writing",
+        "docs":  "ponytail-docs",
+        "data":  "ponytail-data",
+        "presentation":  "ponytail-presentation",
+        "browser":  "ponytail-browser",
+        "feishu":  "ponytail-feishu"
+    },
     "capabilities":  [
                          {
                              "id":  "feishu-doc",
@@ -125,9 +135,28 @@
                                               "implement",
                                               "code"
                                           ],
-                             "entrypoint":  "native coding",
+                             "entrypoint":  "ponytail preflight -> native coding / existing skill / staff",
                              "lifecycle":  "behavior-verified",
-                             "verify":  "DSH 原生 + superpowers/ponytail/addyosmani",
+                             "verify":  "PonyTail preflight metadata; DSH native execution remains the behavior evidence",
+                             "policy":  {
+                                 "preflight":  "required",
+                                 "defaultIntensity":  "full",
+                                 "appliesTo":  [
+                                     "write",
+                                     "debug",
+                                     "refactor",
+                                     "review",
+                                     "dependency-selection"
+                                 ],
+                                 "neverSkip":  [
+                                     "read-before-write",
+                                     "reuse-before-add",
+                                     "root-cause-fix",
+                                     "security",
+                                     "error-handling",
+                                     "required-validation"
+                                 ]
+                             },
                              "fallback":  "DSH 原生代码能力",
                              "source":  "DSH-native-or-user-configured",
                              "compatibility":  [
