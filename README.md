@@ -1,150 +1,127 @@
-<h1 align="center">⚔️ 无极军团模式 · dsh-wuji-legion-mode</h1>
+# 无极军团模式 · dsh-wuji-legion-mode
 
-<p align="center">
-  <strong>把无极军团做成 DeepSeek Harness 中可主动选择、完整运行的独占模式。</strong><br>
-  <em>Wuji Legion as a selectable, complete, and isolated operating mode for DeepSeek Harness.</em><br>
-  <sub>选择它，进入一支有组织、有纪律、能调度与交付的智能体军团；离开它，其他模式仍按自己的规则运行。<br>Choose it to enter an organized, disciplined, and deliverable agent legion; leave it, and every other mode stays on its own terms.</sub>
-</p>
+> **让不懂 Skill、插件、MCP 是什么的小白，只用人话提出要求；进入这个模式后，无极军团自动调齐合适的能力把事情办成，而且越用越强。**
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Platform-DeepSeek%20Harness-4D6BFE?style=flat-square" alt="DeepSeek Harness">
-  <img src="https://img.shields.io/badge/Type-Selectable%20Mode-8B5CF6?style=flat-square" alt="Selectable Mode">
-  <img src="https://img.shields.io/badge/Runtime-Isolated-F59E0B?style=flat-square" alt="Isolated Runtime">
-  <img src="https://img.shields.io/badge/Orchestration-Wuji%20Legion-22C55E?style=flat-square" alt="Wuji Legion">
-  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="MIT">
-</p>
+这是无极军团的 **DSH 可选择、独占、隔离运行模式**。它和同一账号下的 [`dsh-wuji-legion-global`](https://github.com/AI-wuji/dsh-wuji-legion-global) 有同一个初衷：让用户不必理解底层能力，就能用自然语言驱动一支有组织、有纪律、能协作和交付的智能体军团。
 
-<p align="center">
-  <a href="https://ai-wuji.github.io/dsh-wuji-legion-mode/index.zh.html">中文在线展示页</a> · <a href="https://ai-wuji.github.io/dsh-wuji-legion-mode/">English Online Showcase</a>
-</p>
+区别只有一个，但非常重要：
 
----
-
-## 🎯 一句话 / One-Liner
-
-> **想让一支有组织、有纪律、可调度、可审查的智能体军团完成复杂目标时，选择无极军团模式；不选择时，DSH 的其他模式保持原样。**
->
-> *Choose Wuji Legion Mode when a complex goal calls for an organized, disciplined, schedulable, and reviewable agent legion; leave it unselected and every other DSH mode remains unchanged.*
-
-不是替换极简模式，也不是把军团规则塞进所有会话；它是一个由用户主动进入的完整运行环境。
-
-*It does not replace minimal mode or inject legion rules into every conversation; it is a complete runtime environment entered deliberately by the user.*
-
----
-
-## ⚔️ 它是什么 / What It Is
-
-无极军团模式是面向 **DeepSeek Harness** 的一个**可选、独占、完整的多智能体运行模式**。它不是普通聊天人格，更不是默认全局插件：只有用户选择该模式，阿极、铁律、参谋部、主帅、独立官员、任务投影、记忆和治理工具才会作为同一份运行契约启动。
-
-*Wuji Legion Mode is a selectable, isolated, complete multi-agent operating mode for DeepSeek Harness. It is neither an ordinary chat persona nor a default global plugin: only when the user chooses it do A-Ji, the rules, staff office, commanders, independent officers, task projections, memory, and governance tools start as one runtime contract.*
-
-```
-用户选择“无极军团模式”
-        ↓
-阿极：收集需求、澄清边界、汇报结果
-        ↓
-参谋部：规划任务、校验依赖、调度执行
-        ↓
-主帅：按领域选择能力路线，不另建第二中枢
-        ↓
-专家 / 工兵：在限定任务内执行并返回回执
-        ↓
-官员：仅在需要时独立建议与验证，零修改权
-```
-
-**模式是完整启用，边界也是完整隔离。** 军团模式内遵守军团契约；切换到其他模式后，其他模式继续使用各自的插件、人格和工作方式。
-
-*The mode enables a complete system, and enforces a complete boundary. Inside it, the legion contract applies; outside it, other modes retain their own plugins, personas, and workflows.*
-
----
-
-## 🔥 三大卖点 / Three Highlights
-
-### ① 主动选择，不抢占默认 / Explicit Opt-In, No Default Takeover
-
-无极军团是一个新增模式，不替换极简模式，也不要求每个新会话都使用军团流程。用户想做快速问答、轻量工作或使用其他插件组合时，仍可选择其他模式；只有需要完整军团能力时才切换进来。
-
-*Wuji Legion is an added mode: it does not replace minimal mode or force every new conversation through legion procedures. Users remain free to choose other modes for quick answers, lightweight work, or other plugin combinations.*
-
-### ② 整套契约，一起运行 / One Complete Contract
-
-阿极 persona、铁律、任务契约、参谋部调度、状态投影、记忆、审查和治理不是零散开关。选择本模式时，它们一起生效，避免“看似在用军团、实际混跑两套中枢”的边界混乱。
-
-*A-Ji's persona, the rules, task contract, staff scheduling, state projections, memory, review, and governance are not loose switches. They activate together, preventing ambiguous hybrid runs with competing control planes.*
-
-### ③ 模式隔离，插件有边界 / Isolated Mode, Bounded Plugins
-
-“已安装”不等于“当前已加载”。无极军团模式只接入基础能力，或明确声明兼容且不与军团中枢冲突的共享插件；其他模式专属插件默认不继承，避免外部 supervisor、记忆、路由或权限系统与军团核心相互覆盖。
-
-*Installed does not mean loaded. Wuji Legion Mode admits base capabilities and shared plugins that explicitly declare compatibility without conflicting with the legion core. Mode-owned plugins are not inherited by default, avoiding collisions among external supervisors, memory, routing, or permission systems.*
-
----
-
-## 🛡️ 模式边界 / Mode Boundary
-
-| 当前选择 | 会加载什么 | 不会加载什么 |
+| 项目 | 全局版 `dsh-wuji-legion-global` | 当前模式版 |
 |---|---|---|
-| **无极军团模式** | 阿极、铁律、`wuji_*` 工具、投影、参谋部、主帅、官员、模式兼容能力 | 其他模式专属的插件与冲突中枢 |
-| **其他 DSH 模式** | 对应模式本身的 preset、插件与工作方式 | 无极军团 persona、铁律、`wuji_*` 工具、投影、军团记忆与专用治理 |
+| 定位 | 无极军团整体的系统设计、研究、能力目录和长期演进 | DSH 中可以直接选择并运行的 preset |
+| 生效范围 | 描述全局架构与建设方向 | 只有用户选择“无极军团模式”的新会话 |
+| 对其他模式影响 | 不负责运行时隔离 | 不修改、不污染其他 DSH 模式 |
+| 主要问题 | 无极军团为什么这样设计、如何持续建设 | 用户进入模式后，如何让军团真正开始工作 |
 
-这不是把插件简单分成“都能用”或“都不能用”，而是把**安装**和**当前模式下的运行时加载**严格区分。
+## 一句话
 
-*This is not a simplistic all-or-nothing plugin policy. It strictly separates installation from runtime loading in the current mode.*
+用户只需要说：
 
----
+> “把这个表格整理成一份 PPT，再发到指定群里。”
 
-## 🚀 适合什么任务 / When To Choose This Mode
+模式会根据目标自动判断需要哪些能力、是否需要拆解任务、哪些步骤可以并行，以及最终如何验证和回执。用户不需要手动选择 Skill、插件或 MCP。
 
-选择无极军团模式，尤其适合：
+## 这不是又一个多智能体框架
 
-- 多步骤、长周期、需要持续推进的目标；
-- 需要拆解、依赖管理、并行执行和回执的工作；
-- 跨开发、调研、内容、视觉、数据等多类能力协同；
-- 需要保留任务状态、进行验证或需要独立建议的交付；
-- 希望用自然语言下命令，而不是手动选择 Skill、插件或 MCP 的用户。
-
-简单问答、一次性轻任务，或希望使用完全不同插件体系时，请保留在合适的其他 DSH 模式。
-
----
-
-## 📦 当前实现 / Current Implementation
+通用框架给开发者积木；无极军团模式给最终用户一份已经建制好的运行契约：
 
 ```text
-P0  阿极 preset + 能力目录 + 需求/任务/官员投影     ✅
-P1  参谋部规划、DAG 校验与 subagent 派发            ✅
-P2  域主帅路线选择                                  ✅
-P3  独立官员建议与显式会审合同                      ✅
-P4  三层记忆、行为探针与版本化进化                  ✅
-P5  telemetry、反馈与当前 Session 状态摘要          ✅
+用户用人话提出目标
+        ↓
+阿极：理解目标、澄清边界、维护需求、汇报结果
+        ↓
+PonyTail：先判断是否需要做、优先复用、选择最小正确路径
+        ↓
+参谋部：仅对确实复杂且已获准的任务拆解和派发
+        ↓
+主帅：按领域选择能力路线，不亲自执行重活
+        ↓
+专家 / 工兵：执行单一任务，返回产物和验证证据
 ```
 
-> 当前为**公开开发版本**。模式隔离按 DSH 原生 agent preset 作用域实现：选择 `wuji` 的新会话才挂载军团运行时；DSH 原生规定已开始会话固定 preset，因此不提供也不宣称运行时热切换。安装与验证步骤见 [`docs/MODE-IMPLEMENTATION.md`](docs/MODE-IMPLEMENTATION.md)。
+简单任务走短路径；复杂任务才展开完整链路。PonyTail 负责“做什么、做多大、走哪条路径”，参谋部负责已获准任务的拆解，主帅负责领域选型，worker 负责执行。
 
----
+## 三个核心价值
 
-## 🌐 另一个项目：全局版 / The Global Project
+### 1. 系统级无感调用
 
-无极军团还维护一个负责整体建设的全局项目：[`dsh-wuji-legion-global`](https://github.com/AI-wuji/dsh-wuji-legion-global)。它记录无极军团的总体理念、系统架构、研究依据、能力目录、基础集成与长期演进，但它本身不是一个要由用户选择的聊天模式。
+用户不需要知道“应该调用哪个 Skill”。模式根据自然语言目标选择飞书、搜索、写作、数据、演示、浏览器或开发能力，并保持必要的授权和副作用边界。
 
-- 想**直接启用与使用无极军团模式**：留在当前仓库。
-- 想了解**整体设计、研究依据、能力演进或参与底层建设**：前往 [`dsh-wuji-legion-global`](https://github.com/AI-wuji/dsh-wuji-legion-global)。
-- 想使用其他 DSH 模式：不需要加载本项目；它们不应受到无极军团规则影响。
+### 2. PonyTail 作为跨领域行动前置
 
-> 全局版负责“无极军团整体如何存在”，模式版负责“用户选择无极军团后如何运行”。
+PonyTail 不只用于代码。代码、调研、写作、文档、数据、演示、浏览器和飞书任务都遵循同一条最小正确行动原则：先确认目标，再复用已有资源，优先平台原生和已安装能力，最后才新增最小实现。
 
----
+“少做”不能绕过授权、白帽安全、输入校验、错误处理、数据保护、可访问性、必要验证或完成证据。
 
-## 📚 目录 / Repository Layout
+### 3. 越用越强，但不靠堆叠
 
-- `preset/`：无极军团模式的 agent preset 设计；
-- `packages/wuji-host/`：模式专用 Host 插件、投影与工具；
-- `skills/`：模式能力注册表；
-- `scripts/`：模式 profile 安装脚本；
-- `docs/`：模型路由、状态和运行边界说明。
+模式保留任务状态、反馈、记忆和行为探针。能力演化必须有证据、可回滚；不把未经验证的 README、标签或自我声明当成能力已经生效。
 
----
+## 运行边界
 
-<p align="center">
-  <sub>⭐ 选择模式，不是限制选择；是在需要时，让整支军团整装待发。</sub><br>
-  <sub>⚔️ 运筹帷幄之中，决胜千里之外 · To plan within the command tent, to win a thousand miles away.</sub>
-</p>
+### 选择无极军团模式后
+
+- 加载阿极 persona、军团铁律和 PonyTail 常驻规则；
+- 注册 `wuji_*` 工具、任务/需求/官员投影、参谋部、主帅和治理能力；
+- 按任务需要加载领域适配器和已验证能力；
+- 简单任务直接完成，复杂任务才派发 worker；
+- 产出物必须带完成证据，任务不会因“子 agent 已启动”就自动算成功。
+
+### 没有选择这个模式时
+
+- 不加载军团 persona、铁律、PonyTail 模式规则或 `wuji_*` 工具；
+- 不修改 Desktop 默认 preset，也不把军团运行时写入其他模式；
+- 其他 DSH 模式继续使用自己的 preset、插件和工作方式。
+
+这是 DSH 的 preset 级隔离，不提供已开始会话的热切换。
+
+## 背书与边界
+
+- 全局设计参照：[`dsh-wuji-legion-global`](https://github.com/AI-wuji/dsh-wuji-legion-global)
+- PonyTail 上游：[`DietrichGebert/ponytail`](https://github.com/DietrichGebert/ponytail)
+- PonyTail 核心 Skill：[`skills/ponytail/SKILL.md`](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail/SKILL.md)
+- PonyTail 许可证：[`MIT`](https://github.com/DietrichGebert/ponytail/blob/main/LICENSE)
+- 最小化原则参考：[`Martin Fowler · YAGNI`](https://martinfowler.com/bliki/Yagni.html)
+- 安全开发边界参考：[`NIST SP 800-218 SSDF 1.1`](https://csrc.nist.gov/pubs/sp/800/218/final)
+
+全局版的研究依据和系统级设计，不等于当前模式已经调用了对应外部能力。当前仓库只对已经挂载、可调用并通过本地测试的部分作出实现声明。
+
+## 当前版本与验证
+
+当前版本：`0.2.0`
+
+```text
+P0  preset 隔离、阿极、能力目录、三张表投影       ✅
+P1  参谋部计划、DAG 校验、subagent 派发            ✅
+P2  各域主帅路线选择                              ✅
+P3  独立官员建议与显式会审合同                    ✅
+P4  三层记忆、行为探针、版本化进化                 ✅
+P5  PonyTail 跨领域规则、适配器与 worker 继承       ✅
+```
+
+验证命令：
+
+```powershell
+cd packages/wuji-host
+npm test
+```
+
+安装和模式边界说明见 [`docs/MODE-IMPLEMENTATION.md`](docs/MODE-IMPLEMENTATION.md)，PonyTail 接入说明见 [`docs/PONYTAIL-INTEGRATION.md`](docs/PONYTAIL-INTEGRATION.md)。
+
+## 安装与使用
+
+```powershell
+.\scripts\install-local-profile.ps1
+```
+
+然后重启 DSH，新建会话，在 preset 选择器中选择“无极军团”。当前模式不会改变已有会话，也不会修改其他模式。
+
+## 目录
+
+- `preset/`：可选择的 DSH agent preset；
+- `packages/wuji-host/`：模式专用 host 插件、投影和工具；
+- `skills/`：能力注册表、PonyTail 通用纲领和领域适配器；
+- `scripts/`：本地安装脚本；
+- `docs/`：运行边界、状态和集成说明。
+
+如果你要研究无极军团整体如何设计、背书和演进，请看全局版；如果你要在 DSH 里实际进入并使用军团，请留在当前仓库。
