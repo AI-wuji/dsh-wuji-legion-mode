@@ -50,6 +50,7 @@ export default {
         metadata: {
           domain: cap.domain,
           commander: cap.commander,
+          commanderTier: registry.commanderTier || null,
           entrypoint: cap.entrypoint,
           lifecycle: cap.lifecycle,
           verify: cap.verify,

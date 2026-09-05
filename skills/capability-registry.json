@@ -11,6 +11,7 @@
         "browser":  "ponytail-browser",
         "feishu":  "ponytail-feishu"
     },
+    "commanderTier":  "师团级",
     "capabilities":  [
                          {
                              "id":  "feishu-doc",

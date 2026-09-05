@@ -1,12 +1,12 @@
-// Wuji Legion · 各级主帅域内选型（P2）
-// 主帅只在域内选择 provider/skill，不做全局调度、不亲自执行。
+// Wuji Legion · 师团级主帅域内选型（P2）
+// 师团级主帅只在域内选择 provider/skill，不做全局调度、不亲自执行。
 
 const DOMAINS = new Set(['content', 'visual', 'development', 'intelligence', 'data', 'security', 'offense-defense', 'evolution']);
 const TIERS = new Set(['low', 'mid', 'high']);
 
 export const commanderSelectTool = {
   name: 'wuji_commander_select',
-  description: '域主帅选择器：根据任务域、难度和现有 provider 目录选择执行路线；不创建第二个全局调度器。',
+  description: '师团级主帅选择器：根据任务域、难度和现有 provider 目录选择执行路线；不创建第二个全局调度器。',
   parameters: {
     type: 'object',
     properties: {
@@ -22,10 +22,10 @@ export const commanderSelectTool = {
   },
   isConcurrencySafe() { return true; },
   async execute(args) {
-    if (!DOMAINS.has(args.domain)) throw new Error(`未知主帅域：${args.domain}`);
+    if (!DOMAINS.has(args.domain)) throw new Error(`未知师团级主帅域：${args.domain}`);
     if (!TIERS.has(args.difficulty)) throw new Error(`未知能力档位：${args.difficulty}`);
     const candidates = Array.isArray(args.candidates) ? args.candidates : [];
-    if (!candidates.length) throw new Error('主帅选型需要参谋部提供至少一个域内候选');
+    if (!candidates.length) throw new Error('师团级主帅选型需要参谋部提供至少一个域内候选');
     const ranked = [...candidates].sort((a, b) => {
       const av = a.tier === args.difficulty ? 0 : 1;
       const bv = b.tier === args.difficulty ? 0 : 1;

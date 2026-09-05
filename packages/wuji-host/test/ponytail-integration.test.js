@@ -30,11 +30,12 @@ const code = registry.capabilities.find(cap => cap.id === 'code-dev');
 if (code.entrypoint !== 'ponytail preflight -> native coding / existing skill / staff') throw new Error('code-dev is not PonyTail-led');
 if (code.policy?.preflight !== 'required' || code.policy?.defaultIntensity !== 'full') throw new Error('code-dev PonyTail policy missing');
 if (registry.ponytailAdapters?.browser !== 'ponytail-browser') throw new Error('domain adapter metadata missing');
+if (registry.commanderTier !== '师团级') throw new Error('commander hierarchy must remain division-level');
 
 const registrations = [];
 skillRegistryPlugin.apply({ skills: { register(skill) { registrations.push(skill); } } });
 const registeredCode = registrations.find(skill => skill.name === 'code-dev');
-if (!registeredCode?.metadata?.ponytailPreflight || registeredCode.metadata.ponytailAdapter !== 'ponytail-code') throw new Error('runtime registry did not expose PonyTail preflight');
+if (!registeredCode?.metadata?.ponytailPreflight || registeredCode.metadata.ponytailAdapter !== 'ponytail-code' || registeredCode.metadata.commanderTier !== '师团级') throw new Error('runtime registry did not expose PonyTail or commander hierarchy');
 
 const events = [];
 let request;
