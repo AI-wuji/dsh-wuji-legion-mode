@@ -13,6 +13,9 @@ const steps = [
   ['config schema 与包契约一致', ['verify-preset-config.mjs']],
   ['参谋部调度核心单测', [join(repo, 'packages/wuji-staff/staff-core.test.js')]],
   ['参谋部插件形状与 dsh-tools 契约', ['verify-staff-plugin.mjs']],
+  // 必须真的 import 一遍：文本层面的检查曾经全部通过，而 preset 实际挂载失败
+  // （GUI 报 `wuji-staff: never started`）。文本相似不等于模块可加载。
+  ['自研包真实加载（真的 import）', ['verify-self-built-load.mjs']],
   ['缺包 / 错字段必须被拦下（回归）', ['verify-preset-regression.mjs']],
 ];
 

@@ -16,7 +16,7 @@
 //   本插件不假装能做。
 
 import { defineTool } from '@deepseek-ai/dsh-tools';
-import { planSchedule, selectRecipe, DEFAULT_PARALLEL_CAP } from './staff-core.js';
+import { planSchedule, selectRecipe, DEFAULT_PARALLEL_CAP } from '../staff-core.js';
 
 export const name = 'wuji-staff';
 export const inject = ['tools'];
