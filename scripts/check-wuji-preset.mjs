@@ -164,10 +164,14 @@ expect(
   'customSkillDirs 应通过 @wuji/dsh-wuji-bundle 包名反查包根（baseUrl 不是包目录）',
 );
 
-// persona 必须存在且是阿极
+// persona 必须存在且是阿极。
+// 字段名是 `prefix`（@deepseek-ai/dsh-persona 的必填字段），不是旧 2.0 的 `text`。
+// 这里两者都读，只为在写错字段时给出更易懂的报错；字段合法性由
+// verify-preset-config.mjs 按包内真实 schema 严格把关。
 const persona = plugins?.find((p) => p?.id === 'persona');
 expect(persona?.name === '@deepseek-ai/dsh-persona', '缺少 @deepseek-ai/dsh-persona');
-expect(String(persona?.config?.text ?? '').includes('阿极'), 'persona 未包含阿极身份');
+const personaText = String(persona?.config?.prefix ?? persona?.config?.text ?? '');
+expect(personaText.includes('阿极'), 'persona 未包含阿极身份（prefix 为空或未写阿极）');
 
 // Laya 已废弃，回归防护
 const full = readFileSync(file, 'utf8');

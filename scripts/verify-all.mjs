@@ -9,7 +9,8 @@ const steps = [
   ['生成 bundle patch', ['build-wuji-preset.mjs']],
   ['生成物同步校验', ['build-wuji-preset.mjs', '--check']],
   ['preset 结构与包存在性', ['check-wuji-preset.mjs']],
-  ['缺包必须被拦下（回归）', ['verify-preset-regression.mjs']],
+  ['config schema 与包契约一致', ['verify-preset-config.mjs']],
+  ['缺包 / 错字段必须被拦下（回归）', ['verify-preset-regression.mjs']],
 ];
 
 let failed = 0;
