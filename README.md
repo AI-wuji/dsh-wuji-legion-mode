@@ -13,14 +13,20 @@
 | 对其他模式影响 | 不负责运行时隔离 | 不修改、不污染其他 DSH 模式 |
 | 主要问题 | 无极军团为什么这样设计、如何持续建设 | 用户进入模式后，如何让军团真正开始工作 |
 
-## 2.0 更新说明
+## 4.0 更新说明
 
-这次 2.0 不是另起炉灶，而是在原有模式上完成一次面向小白用户的升级：
+这次 4.0 是一次**架构级替换**：把自研运行时全部换成 DSH 官方插件。
 
-- 从“介绍军团架构”升级为“用户只说目标，模式自动组织能力”；
-- PonyTail 从代码领域原则扩展为代码、调研、写作、文档、数据、演示、浏览器和飞书的共同前置；
-- 把“全局版负责整体建设、模式版负责实际运行”的边界写清楚，避免把当前 preset 误解成全局插件；
-- 保留原有的 preset 隔离、阿极白帽能力、任务回执和验证约束，不改变其他 DSH 模式。
+- **删除全部自研运行时**：`packages/wuji-host` 的 20 个 lib 模块（参谋部、任务图、投影、模型路由、上下文门控、委派门禁……）连同其 20 个测试文件一并移除。
+- **改挂官方插件**：复杂任务编排交给 `dsh-tool-workflow` + `dsh-tool-subagent`，长任务用 `dsh-tool-ralph`，跨回合目标用 `dsh-tool-goal`，交付回执用 `dsh-tool-present`。
+- **对齐上游 4.0 的任务优先体系**：阿极唯一入口、懒人行动、白帽判断、证据优先、按需加载窄专业能力。
+- **净效果**：自研 JS 归零，preset 只声明官方插件行 + persona；维护面积大幅下降，能力覆盖面反而上升。
+
+详细设计见 [`docs/WUJI-4.0-DSH-DESIGN.md`](docs/WUJI-4.0-DSH-DESIGN.md)。
+
+## 2.0 历史说明
+
+2.0 在原有模式上完成了一次面向小白用户的升级（PonyTail 跨领域化、边界写清、隔离保留）。这些结论在 4.0 中继续成立，只是运行时实现换成了官方插件。
 
 ## 一句话
 
@@ -41,14 +47,14 @@
         ↓
 PonyTail：先判断是否需要做、优先复用、选择最小正确路径
         ↓
-参谋部：仅对确实复杂且已获准的任务拆解和派发
+按需拆分（仅对确实复杂的任务）
         ↓
-师团级主帅：按领域选择能力路线，不亲自执行重活
+官方原生编排：workflow / subagent / ralph / goal
         ↓
-专家 / 工兵：执行单一任务，返回产物和验证证据
+窄专业能力：按需加载 SKILL.md（代码/调研/写作/文档/数据/演示/飞书）
 ```
 
-简单任务走短路径；复杂任务才展开完整链路。PonyTail 负责“做什么、做多大、走哪条路径”，参谋部负责已获准任务的拆解，师团级主帅负责领域选型，worker 负责执行。
+简单任务走短路径；复杂任务才展开。**不再自建调度层** —— 编排、委派、隔离、权限、压缩全部由 DSH 官方插件承担。
 
 ## 三个核心价值
 
@@ -71,18 +77,32 @@ PonyTail 不只用于代码。代码、调研、写作、文档、数据、演�
 ### 选择无极军团模式后
 
 - 加载阿极 persona、军团铁律和 PonyTail 常驻规则；
-- 注册 `wuji_*` 工具、任务/需求/官员投影、参谋部、师团级主帅和治理能力；
-- 按任务需要加载领域适配器和已验证能力；
-- 简单任务直接完成，复杂任务才派发 worker；
-- 产出物必须带完成证据，任务不会因“子 agent 已启动”就自动算成功。
+- 挂载官方编排面：`tool-workflow`、`tool-subagent` / `tool-subagent-fork`、`tool-ralph`、`tool-goal`、`tool-todo`、`tool-present`；
+- 按任务需要加载领域适配器（PonyTail 系列）与 4.0 入口技能（`wuji-legion-4-0`、`wuji-leader-routing`）；
+- 简单任务由阿极直接完成，复杂任务才拆分并委派；
+- 产出物必须带完成证据：**「已派发」不等于「已完成」**，子 agent 的中间步骤不算证据。
 
 ### 没有选择这个模式时
 
-- 不加载军团 persona、铁律、PonyTail 模式规则或 `wuji_*` 工具；
-- 不修改 Desktop 默认 preset，也不把军团运行时写入其他模式；
+- 不加载军团 persona、铁律、PonyTail 模式规则或军团技能；
+- 不修改 Desktop 默认 preset，也不把军团组件写入其他模式；
 - 其他 DSH 模式继续使用自己的 preset、插件和工作方式。
 
 这是 DSH 的 preset 级隔离，不提供已开始会话的热切换。
+
+## 设计原则：不造轮子
+
+4.0 最重要的一条工程约束是**不重复实现宿主已有的能力**。本模式因此：
+
+- **不建调度平台**：编排用 `workflow`，委派用 `subagent`，续跑用 `ralph`；
+- **不建隔离层**：沙箱、权限、审批复用 DSH 原生实现；
+- **不建状态库**：会话状态与检索用 `dsh-session-query-sqlite`；
+- **不建上下文记账**：用 `dsh-token-meter` + `compaction-*`；
+- **不自建专家进程**：窄专业能力写成 SKILL.md，按需加载，冷态零成本。
+
+上游 4.0 的 Rust/SQLite 调度辅助（`task_circuit.go`、`task_scheduler.go`、`workspace_graph.go` 等）
+在 DSH 上由官方插件承接；上游自述的 `runtime_admission=false`、`prepared_not_executed`
+在本模式里被真实执行替代 —— 因为 DSH 的 `workflow` / `subagent` 是受支持的运行时真执行。
 
 ## 背书与边界
 
@@ -97,40 +117,58 @@ PonyTail 不只用于代码。代码、调研、写作、文档、数据、演�
 
 ## 当前版本与验证
 
-模式版本：`2.0` · 宿主包版本：`0.2.0`
+模式版本：`4.0` · bundle 版本：`0.4.0`
 
 ```text
-P0  preset 隔离、阿极、能力目录、三张表投影       ✅
-P1  参谋部计划、DAG 校验、subagent 派发            ✅
-P2  师团级主帅路线选择                            ✅
-P3  独立官员建议与显式会审合同                    ✅
-P4  三层记忆、行为探针、版本化进化                 ✅
-P5  PonyTail 跨领域规则、适配器与 worker 继承       ✅
+P0  4.0 阿极 persona、懒人行动、白帽与铁律          ✅
+P1  官方编排面装配（workflow/subagent/ralph/goal）   ✅
+P2  4.0 SKILL.md 与路由摘要按需加载                  ✅
+P3  自研运行时全部移除                               ✅
+P4  本地 profile 安装与隔离验证                      ✅
 ```
 
-验证命令：
+验证命令（在仓库根目录）：
 
 ```powershell
-cd packages/wuji-host
-npm test
+node scripts\verify-all.mjs
 ```
+
+它依次跑：生成 bundle patch → 生成物同步校验 → preset 结构与**包存在性** → 缺包回归测试。
+
+`check-wuji-preset.mjs` 会强制三条回归：
+- **自研行必须为零** —— 任何人把 `wuji-runtime` / `@wuji/dsh-wuji-*` 加回 preset 都会被拦下；
+- **官方编排行必须齐备** —— `tool-workflow`、`workflow-ptc`、`tool-subagent`、`tool-goal`、`tool-todo`、`present`；
+- **引用的包必须存在于本机 DSH** —— 见下方说明，这是本项目真实踩过的坑。
+
+### 为什么「包存在性」是硬门禁
+
+`@deepseek-ai/dsh-agent-preset-registry` 在 preset 子插件 import 失败时会
+**拒绝整个 mount**，且不向界面报错 —— 症状是「preset 已注册但选择器里看不到、
+新建会话仍是 standard」。
+
+本项目正是因此长期失效：preset 里写的 `@deepseek-ai/dsh-workflow-worker-thread`
+在本版 DSH 中**不存在**（正确包名是 `@deepseek-ai/dsh-workflow-ptc`）。
+`verify-preset-imports.mjs` 按 DSH `app.asar` 的真实成员表逐个判定，把这类错误挡在安装前。
 
 安装和模式边界说明见 [`docs/MODE-IMPLEMENTATION.md`](docs/MODE-IMPLEMENTATION.md)，PonyTail 接入说明见 [`docs/PONYTAIL-INTEGRATION.md`](docs/PONYTAIL-INTEGRATION.md)。
 
 ## 安装与使用
 
 ```powershell
-.\scripts\install-local-profile.ps1
+node scripts\build-wuji-preset.mjs
 ```
 
-然后重启 DSH，新建会话，在 preset 选择器中选择“无极军团”。当前模式不会改变已有会话，也不会修改其他模式。
+然后在 **Desktop 内**用 plugin manager 安装 `packages/wuji-bundle` 目录
+（`action: install_bundle`，`target` = bundle 绝对路径）。安装会写 Host 进程，需要完全权限或批准。
+
+重启 DSH，新建会话，在 preset 选择器中选择“无极军团”。当前模式不会改变已有会话，也不会修改其他模式。
 
 ## 目录
 
-- `preset/`：可选择的 DSH agent preset；
-- `packages/wuji-host/`：模式专用 host 插件、投影和工具；
-- `skills/`：能力注册表、PonyTail 通用纲领和领域适配器；
-- `scripts/`：本地安装脚本；
-- `docs/`：运行边界、状态和集成说明。
+- `preset/`：可选择的 DSH agent preset（persona + 官方插件行，无自研行）；
+- `packages/wuji-bundle/`：bundle 声明与生成物（`cordis.patch.yml`）+ 技能目录；
+- `skills/`：PonyTail 通用纲领、领域适配器与 4.0 入口技能；
+- `scripts/`：构建、校验与本地安装脚本；
+- `docs/`：运行边界、4.0 设计与集成说明。
 
 如果你要研究无极军团整体如何设计、背书和演进，请看全局版；如果你要在 DSH 里实际进入并使用军团，请留在当前仓库。

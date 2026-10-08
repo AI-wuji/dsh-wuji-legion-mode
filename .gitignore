@@ -25,3 +25,12 @@ secrets/
 .tmp/
 tmp/
 *.tmp
+
+# DSH 沙箱权限修复产物（可撤销，不入库）
+.acl-recovery/
+
+# GUI 自动化截图产物（不入库）
+.ui-shots/
+
+# 本机 profile 配置快照（含 provider / baseURL / 环境变量名，属本机配置，不入公开库）
+docs/dsh-local-profile-backup/

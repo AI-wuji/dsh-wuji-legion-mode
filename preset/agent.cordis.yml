@@ -57,8 +57,24 @@
       6. completion evidence：完成证据
       规则：规矩立在开工前，做完之后没有「检查重做」环节。新增任何「验证步骤」前，必须论证「为什么不能用前置限制替代」。
 
+      # 任务契约的落地方式（4.0）
+      # 上方的 6 项契约不靠自研工具校验，改用 DSH 原生机制承接：
+      # - 计划模式（plan mode）在动手前锁定范围与验收，`exit_plan_mode` 提交后需用户批准；
+      # - `todo_write` 把已批准的工作拆成可追踪的清单，复杂任务用 `workflow` 进一步扇出。
+      # 因此不引入 `wuji_contract` 之类自研工具：契约由「计划模式 + 待办清单」确定性承载。
+
+      # 军团工具使用规约（4.0：改用 DSH 官方原生工具，不再自研 wuji_* 工具）
+      # 工具注册了不会自己浮上来；不写清调用时机，它们就等于不存在。
+      - 纯对话与小任务：直接回答，不建任务图、不召集专家、不进参谋部。
+      - 复杂任务：先用 `todo_write` 锁定任务清单，再用 `workflow` 做 DAG 扇出，或用 `subagent` / `subagent_fork` 委派单个子任务。
+      - 「已派发」不是「已完成」：`subagent` 只有返回产物，才能说完成；子 agent 的中间步骤不算证据。
+      - 需要独立复核时用 `subagent` 重新起一个实例验证，不要自己复核自己；官方 `dsh-experimental-auto-review` 可用时优先用它。
+      - 跨回合的长目标用 `goal` 工具持久化；需要自动连续推进时用 `ralph`。
+      - 交付产物时用 `present` 登记文件，不要只在正文里贴路径。
+      - 任何时候都不要把「已派发」「已准备」「目录里有」说成「已完成」。
+
       # 无极军团 PonyTail 常驻规则（跨领域扩展）
-      对任何需要行动、调用能力或交付产物的任务，先理解真实目标和完整流程，再执行最小正确路径：先判断是否真的需要做，再复用当前会话、仓库、文档、数据和已有能力；随后优先平台原生、标准能力、已安装 Skill/插件/MCP；只有仍不能满足时才新增最小实现，并先决定是否真的需要参谋部、DAG 或 worker。PonyTail 主导做什么、做多大、走哪条路径；参谋部只拆解已获准的复杂任务，师团级主帅选择领域能力，worker 执行具体工作。
+      对任何需要行动、调用能力或交付产物的任务，先理解真实目标和完整流程，再执行最小正确路径：先判断是否真的需要做，再复用当前会话、仓库、文档、数据和已有能力；随后优先平台原生、标准能力、已安装 Skill/插件/MCP；只有仍不能满足时才新增最小实现，并先决定是否真的需要 DAG 或 worker。PonyTail 主导做什么、做多大、走哪条路径。
       这套规则不得削弱阿极既有白帽能力、授权、安全、输入校验、错误处理、数据保护、可访问性、用户明确要求、必要验证和完成证据。简单任务直接执行；复杂任务才升级。该跨领域纲领是 Wuji 扩展，上游 PonyTail 的原生核心主要面向代码。
 
       # 运行环境（保留 cordis 自述能力）
@@ -118,6 +134,9 @@
 # resolves `goals` on the host and an entry-local realm here would hide it. The
 # registry is keyed by session anyway, so one host instance serves every
 # session. What a preset chooses is whether its agent can call the goal tool.
+- id: command-goal
+  name: '@deepseek-ai/dsh-command-goal'
+
 - id: tool-goal
   name: '@deepseek-ai/dsh-tool-goal'
 
@@ -216,6 +235,7 @@
       config:
         provider: spawn
         toolName: subagent
+        modelSelectionSettings: true
         backgroundMode: continuable
 
     - id: tool-subagent-fork
@@ -234,7 +254,7 @@
       config:
         provider: codex
         toolName: subagent_codex
-        enableRunInBackground: false
+        backgroundMode: one-shot
         maxDepth: provider-managed
 
     - id: tool-subagent-claude-code
@@ -243,19 +263,26 @@
       config:
         provider: claude-code
         toolName: subagent_claude_code
-        enableRunInBackground: false
+        backgroundMode: one-shot
         maxDepth: provider-managed
 
-    - id: workflow-worker-thread
-      name: '@deepseek-ai/dsh-workflow-worker-thread'
+    # 工作流引擎：官方 standard preset 用的是 `dsh-workflow-ptc`（provider: spawn）。
+    # 早期版本这里写的是 `@deepseek-ai/dsh-workflow-worker-thread` —— 该包在本版
+    # DSH 中**不存在**，会让 preset 的 activation audit 失败、整个 mount 被拒，
+    # 表现为「preset 已注册但选择器里看不到、新建会话仍是 standard」。
+    - id: workflow-ptc
+      name: '@deepseek-ai/dsh-workflow-ptc'
       config:
         provider: spawn
 
     - id: tool-workflow
       name: '@deepseek-ai/dsh-tool-workflow'
 
+    # ralph 在官方 shipped 默认里是关闭的（disabled: true）。本模式跟随官方默认，
+    # 需要自动连续多轮时再由用户显式开启，避免无界自动续跑。
     - id: tool-ralph
       name: '@deepseek-ai/dsh-tool-ralph'
+      disabled: true
       config:
         subagentProvider: spawn
         maxRounds: 64
@@ -270,12 +297,20 @@
   config:
     allowParallelInProgress: true
 
+# 4.0 交付口径要求「交付物必须带完成证据」。`present` 把产物登记为可打开的
+# 交付物卡片，替代原自研 host 的 task 投影回执。
+# 行 id 用官方 standard preset 的 `present`，而不是 `tool-present`。
+- id: present
+  name: '@deepseek-ai/dsh-tool-present'
+
 # The `web` service and its search provider stay in the host composition; only
 # the model-facing tool is per-session.
+# `fetch: true` 与官方 standard preset 一致：军团任务常需读取原始页面取证，
+# 关掉 fetch 会让「凡事有背书」这条铁律缺少抓取原文的手段。
 - id: tool-web
   name: '@deepseek-ai/dsh-tool-web'
   config:
-    fetch: false
+    fetch: true
     searchTimeoutMs: 60000
 
 # ── self-modification ───────────────────────────────────────────────────────
@@ -295,22 +330,33 @@
 - id: skill-filesystem
   name: '@deepseek-ai/dsh-skill-filesystem'
   config:
+    # 挂在本 preset 自己的 skill-filesystem 行上，而不是 host 层：挂 host 会让所有
+    # preset 都看到军团技能，破坏「其他 preset 不加载军团组件」的隔离。
+    #
+    # 技能根必须是 **skills 目录本身**：dsh-skill-filesystem 的发现只有一层深，
+    # 只认 `<root>/<name>/SKILL.md` 和 `<root>/<name>.md`，多一层就全部落空。
+    #
+    # 用 createRequire(baseUrl).resolve(...) 反查本 bundle 的包根，再拼 skills/。
+    # 这与官方 dsh-agent-preset 自身的做法一致（它同样在自己的包根放 skills/ 并
+    # 用 skill-filesystem 挂载）。不能改用 `new URL('skills/', baseUrl)`：baseUrl
+    # 是 loader 的 include root 锚点，不是包目录。
     customSkillDirs:
-      - !!js "process.getBuiltinModule('node:url').fileURLToPath(new URL('skills/', baseUrl))"
+      - !!js "process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:path').dirname(process.getBuiltinModule('node:module').createRequire(baseUrl).resolve('@wuji/dsh-wuji-bundle/package.json')), 'skills')"
 
 - id: tool-skill
   name: '@deepseek-ai/dsh-tool-skill'
 
-# ── Wuji-exclusive runtime ───────────────────────────────────────────────────
-# This row lives in the Wuji preset, never in profiles/desktop/cordis.patch.yml.
-# The group owns the private staff service and all Wuji registrations. A
-# non-Wuji preset never mounts this subtree; disposal removes its scoped tools,
-# skills and projection registrations.
-- id: wuji-runtime
-  name: cordis:group
-  group: true
-  isolate:
-    wujiStaff: true
-  config:
-    - id: wuji-host
-      name: '@wuji/dsh-wuji-host'
+# ── 自研运行时已移除（4.0 改造） ─────────────────────────────────────────────
+# 原 `wuji-runtime` isolate realm 与 `@wuji/dsh-wuji-host` 自研模块（20 个 lib
+# 文件：staff / staff-service / role-task-graph / model-policy / context-gate 等）
+# 已全部卸载。它们承担的职责现由 DSH 官方插件承接：
+#
+#   参谋部任务图 / DAG 校验 / 派发  → dsh-tool-workflow + dsh-tool-subagent
+#   师团级主帅领域选择              → dsh-skill-filesystem 按需加载 SKILL.md
+#   三张表投影 / 状态与幂等          → dsh-session-query-sqlite + dsh-session-projection
+#   模型路由                        → dsh-agent-default-model + 本 preset 配置
+#   上下文门控                      → dsh-token-meter + dsh-compaction-*
+#   交付回执                        → dsh-tool-present + dsh-message-feedback
+#
+# 保留 preset 隔离语义：本文件的所有行只在选择「无极军团」的会话挂载，
+# 其他 preset 不加载其中任何一项。
