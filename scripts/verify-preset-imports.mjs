@@ -8,7 +8,13 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 
 const ASAR = 'C:/Users/Administrator/AppData/Local/Programs/DeepSeek Harness/resources/app.asar';
-const PATCH = process.argv[2];
+// 默认校验 bundle 的生成物，便于单文件诊断。
+const PATCH = process.argv[2] ?? 'packages/wuji-bundle/cordis.patch.yml';
+
+// 本仓库自有的包：装在 profile 的 node_modules 里，不在 app.asar 内。
+// 它们经过明确决策保留（见 check-wuji-preset.mjs 的 ALLOWED_SELF_BUILT），
+// 因此按「本地包」校验其存在性，而不是当作官方包去 asar 里找。
+const OWN_PACKAGES = new Set(['@wuji/dsh-wuji-bundle', '@wuji/dsh-wuji-staff']);
 
 // 1) asar 成员表
 const buf = readFileSync(ASAR);
@@ -45,13 +51,40 @@ console.log('');
 // 3) 逐个判定包是否存在于本机 DSH
 let bad = 0;
 const seen = new Set();
+const ownSeen = new Set();
 for (const r of flat) {
   const name = String(r.name ?? '');
-  if (!name.startsWith('@deepseek-ai/')) continue;
   if (name.startsWith('cordis:')) continue;
+
+  // 本仓库自有包：校验它们在 profile node_modules 里真实存在
+  if (name.startsWith('@wuji/')) {
+    const bare = name.split('/').slice(0, 2).join('/');
+    if (ownSeen.has(bare)) continue;
+    ownSeen.add(bare);
+    if (!OWN_PACKAGES.has(bare)) {
+      bad += 1;
+      console.log(`  UNKNOWN  ${name}   (行 id=${r.id})  ← 未登记的 @wuji/* 包，需先论证官方无对应能力`);
+      continue;
+    }
+    const installed = `C:/Users/Administrator/.dsh/profiles/node_modules/${bare}/package.json`;
+    const isBundle = bare === '@wuji/dsh-wuji-bundle';
+    const candidate = isBundle ? installed.replace('package.json', 'cordis.patch.yml') : installed;
+    let exists = false;
+    try {
+      exists = readFileSync(candidate).length > 0;
+    } catch {
+      exists = false;
+    }
+    if (!exists) {
+      bad += 1;
+      console.log(`  MISSING  ${name}   (行 id=${r.id})  ← 未安装到 profile，preset 会挂载失败`);
+    }
+    continue;
+  }
+
+  if (!name.startsWith('@deepseek-ai/')) continue;
   // 子路径导出按包根判定
   const parts = name.split('/');
-  const pkg = `@deepseek-ai/${parts[1]}`;
   const bare = parts[1];
   if (seen.has(bare)) continue;
   seen.add(bare);
@@ -71,6 +104,9 @@ for (const r of cordisRows) {
 
 console.log('');
 console.log(`@deepseek-ai/* 唯一包数: ${seen.size}`);
-console.log(bad === 0 ? '结论：所有引用包均存在于本机 DSH（import 不会因缺包失败）'
-                      : `结论：${bad} 个包缺失，preset 无法挂载`);
+if (ownSeen.size) {
+  console.log(`@wuji/* 自研包（已登记）: ${[...ownSeen].join(', ')}`);
+}
+console.log(bad === 0 ? '结论：所有引用包均存在于本机（import 不会因缺包失败）'
+                      : `结论：${bad} 个包缺失或未登记，preset 无法挂载`);
 process.exit(bad === 0 ? 0 : 1);

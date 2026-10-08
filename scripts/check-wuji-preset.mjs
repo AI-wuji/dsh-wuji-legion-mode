@@ -72,11 +72,7 @@ for (const p of plugins ?? []) {
   ids.add(p?.id);
 }
 
-// 4.0 改造回归：自研运行时必须已全部移除，改由 DSH 官方插件承接。
-// 这是本仓库最重要的隔离约束 —— 一旦有人把 wuji-runtime / wuji-host 加回来，
-// 就说明又回到了「自建调度平台」的老路，必须在此拦下。
-//
-// 注意：插件行会嵌在 cordis:group 的 config 里（如 delegation / compaction 分组），
+// 插件行会嵌在 cordis:group 的 config 里（如 delegation / compaction 分组），
 // 所以必须递归展开后再找，不能只扫顶层。
 const flatten = (rows) => {
   const out = [];
@@ -88,11 +84,35 @@ const flatten = (rows) => {
 };
 const allRows = flatten(plugins);
 
+// 自研行白名单：这些是**有意**保留的自研能力，其余 @wuji/* 一律禁止。
+//
+// 历史上 4.0 改造把自研运行时全部删掉了（wuji-host 20 个模块、wuji-runtime 分组），
+// 因为它们的职责官方插件都能承接。唯有一件事官方没有对应包：
+//
+//   `@wuji/dsh-wuji-staff` —— 参谋部的确定性调度核心
+//   （打分选择 / 依赖图 / 写集冲突 / 并发分组 / 缺口传播）
+//
+// 已核实官方 289 个包中没有调度器；而这件事必须确定性、可复现，
+// 不能每次由模型现场生成脚本（烧 token、有延迟、且每次产出可能不同）。
+// 因此经明确决策后以插件形式保留，并在此登记 —— 任何白名单外的 @wuji/* 行
+// 都会让校验失败，防止自研面重新蔓延。
+const ALLOWED_SELF_BUILT = new Set(['@wuji/dsh-wuji-staff']);
+
 const runtime = allRows.find((p) => p?.id === 'wuji-runtime');
 expect(!runtime, 'wuji-runtime 自研分组应已于 4.0 改造移除，不得重新引入');
+
+const selfBuilt = allRows
+  .map((p) => String(p?.name ?? ''))
+  .filter((n) => n.startsWith('@wuji/') && !ALLOWED_SELF_BUILT.has(n));
 expect(
-  !allRows.some((p) => String(p?.name ?? '').startsWith('@wuji/')),
-  'preset 不应再依赖任何 @wuji/* 自研包（4.0 改为使用 @deepseek-ai/* 官方包）',
+  selfBuilt.length === 0,
+  `preset 出现白名单外的自研包：${selfBuilt.join(', ')}（如需新增请先论证官方无对应能力，并加入 ALLOWED_SELF_BUILT）`,
+);
+
+// 参谋部必须存在且挂在 preset 内 —— 这是「军团自动调用、用户无需选择」的保证
+expect(
+  allRows.some((p) => String(p?.name ?? '') === '@wuji/dsh-wuji-staff'),
+  '参谋部 @wuji/dsh-wuji-staff 必须挂在 preset 内（挂 host 层会污染其他 preset）',
 );
 
 // 官方编排面必须存在：这是 4.0「复杂任务真实执行」的能力来源

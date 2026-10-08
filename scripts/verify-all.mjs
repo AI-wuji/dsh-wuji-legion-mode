@@ -5,11 +5,14 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
+const repo = join(here, '..');
 const steps = [
   ['生成 bundle patch', ['build-wuji-preset.mjs']],
   ['生成物同步校验', ['build-wuji-preset.mjs', '--check']],
   ['preset 结构与包存在性', ['check-wuji-preset.mjs']],
   ['config schema 与包契约一致', ['verify-preset-config.mjs']],
+  ['参谋部调度核心单测', [join(repo, 'packages/wuji-staff/staff-core.test.js')]],
+  ['参谋部插件形状与 dsh-tools 契约', ['verify-staff-plugin.mjs']],
   ['缺包 / 错字段必须被拦下（回归）', ['verify-preset-regression.mjs']],
 ];
 
@@ -17,7 +20,10 @@ let failed = 0;
 for (const [label, [script, ...scriptArgs]] of steps) {
   process.stdout.write(`\n=== ${label} ===\n`);
   try {
-    execFileSync(process.execPath, [join(here, script), ...scriptArgs], { stdio: 'inherit' });
+    // 允许步骤指向仓库内任意路径（如 packages/ 下的测试），
+    // 因此绝对路径直接使用，相对路径按 scripts/ 解析。
+    const target = script.includes(':') || script.startsWith('/') ? script : join(here, script);
+    execFileSync(process.execPath, [target, ...scriptArgs], { stdio: 'inherit' });
   } catch {
     failed += 1;
     console.error(`[verify-all] 步骤失败: ${label}`);
