@@ -9,6 +9,10 @@ const repo = join(here, '..');
 const steps = [
   ['生成 bundle patch', ['build-wuji-preset.mjs']],
   ['生成物同步校验', ['build-wuji-preset.mjs', '--check']],
+  // 73 个角色文件从 4.0 源数据生成；--check 保证生成物与源数据一致（不手改）
+  ['生成角色文件（16 主帅 / 57 专家）', ['build-wuji-roles.mjs']],
+  ['角色文件与源数据一致', ['build-wuji-roles.mjs', '--check']],
+  ['角色格式 / 归属 / 可发现性', ['verify-wuji-roles.mjs']],
   ['preset 结构与包存在性', ['check-wuji-preset.mjs']],
   ['config schema 与包契约一致', ['verify-preset-config.mjs']],
   ['参谋部调度核心单测', [join(repo, 'packages/wuji-staff/staff-core.test.js')]],
@@ -18,6 +22,8 @@ const steps = [
   ['自研包真实加载 + apply', ['verify-self-built-load.mjs']],
   // 反过来证明上面那道门禁不是摆设：注入真实缺陷，它必须失败。
   ['加载门禁自身有效性（注入缺陷验证）', ['verify-load-guard-regression.mjs']],
+  // 回答「不同主帅下的专家能否被真正选中」—— 用真实配方表端到端验证
+  ['参谋部跨主帅选择（真实配方表）', ['verify-staff-selection.mjs']],
   ['缺包 / 错字段必须被拦下（回归）', ['verify-preset-regression.mjs']],
 ];
 

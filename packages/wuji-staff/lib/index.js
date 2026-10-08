@@ -21,10 +21,31 @@
 //   并让整行 fiber 失败、整个 preset 拒绝挂载。这不是可选项。
 
 import { defineTool } from '@deepseek-ai/dsh-tools';
+import { readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { planSchedule, selectRecipe, DEFAULT_PARALLEL_CAP } from '../staff-core.js';
 
 export const name = 'wuji-staff';
 export const inject = ['tools'];
+
+// ── 真实配方表 ──────────────────────────────────────────────────────────────
+//
+// 从上游 4.0 的 delegation-manifest.json 生成（16 主帅族 / 21 条配方）。
+// 提供这张表是为了让选择**基于真实数据而非模型印象**：
+// 模型若不查表，很可能凭感觉编一个主帅名，而上游规则明确禁止「临时编造主帅」。
+//
+// 用 try/catch 包裹：配方表缺失不应让整个插件加载失败 ——
+// 那样会让 preset 无法挂载（本项目已因此故障两次）。
+let RECIPE_TABLE = { leader_families: [], recipes: [] };
+try {
+  const here = dirname(fileURLToPath(import.meta.url));
+  const raw = readFileSync(join(here, '..', 'data', 'recipes.json'), 'utf8');
+  RECIPE_TABLE = JSON.parse(raw);
+} catch {
+  // 保持空表：wuji_staff_recipes 会返回空列表，其余工具照常工作。
+}
+
 
 /** 工具描述：触发条件必须**可判定**，否则模型判不出边界就不会调用。 */
 const PLAN_DESCRIPTION = [
@@ -157,9 +178,8 @@ export function apply(ctx, config = {}) {
       typed_intents: { type: 'array', items: { type: 'string' }, description: '子任务类型意图。' },
       recipes: {
         type: 'array',
-        required: true,
         items: RECIPE_ITEM,
-        description: '候选主帅配方。',
+        description: '候选配方。**省略时自动使用本机内置的 21 条真实配方**（推荐），只在需要测试假设时才显式传入。',
       },
     },
     output: {
@@ -175,14 +195,75 @@ export function apply(ctx, config = {}) {
         type: 'text',
         text: value?.gap
           ? `参谋部判定 selection_gap：${value.reason}\n该子任务及依赖它的分支应被阻塞，其他分支继续。`
-          : `参谋部选定：${(value?.candidates ?? []).map((c) => c.id).join(', ')}`,
+          : `参谋部选定：${(value?.candidates ?? []).map((c) => c.id).join(', ')}`
+            + (value?.candidates?.[0]?.members
+              ? `\n可引用成员：${value.candidates[0].members.join('、')}`
+              : ''),
       }],
     },
     execute(args) {
-      return Promise.resolve(selectRecipe(args.recipes, {
+      // 未显式给配方时，用本机内置的真实配方表 ——
+      // 避免模型凭印象编造主帅名（上游规则明确禁止）。
+      const recipes = args.recipes?.length ? args.recipes : RECIPE_TABLE.recipes;
+      return Promise.resolve(selectRecipe(recipes, {
         domain: args.domain,
         typed_intents: args.typed_intents ?? [],
       }));
+    },
+  }));
+
+  // ── 列出真实配方表 ────────────────────────────────────────────────────────
+  ctx.tools.register(defineTool({
+    name: 'wuji_staff_recipes',
+    description: [
+      '无极军团参谋部：列出本机内置的 16 个主帅族与 21 条真实配方。',
+      '当你不确定某个领域该由哪个主帅承接时，先调用本工具查表，',
+      '**不要凭印象编造主帅名** —— 上游规则明确禁止临时编造主帅或专家。',
+      '返回值含每条配方的 domain、typed_intents 与可引用成员。',
+    ].join(' '),
+    parameters: {
+      domain: {
+        type: 'string',
+        description: '只看某个领域的配方（如 software、comfyui、video）。省略则返回全部。',
+      },
+    },
+    output: {
+      schema: {
+        type: 'object',
+        additionalProperties: true,
+        properties: {
+          leader_families: { type: 'array', required: true, items: { type: 'string' } },
+          recipes: { type: 'array', required: true, items: { type: 'object', additionalProperties: true } },
+        },
+      },
+      render: (args, value) => {
+        const list = value?.recipes ?? [];
+        if (!list.length) {
+          return [{ type: 'text', text: '内置配方表为空或未加载。' }];
+        }
+        const lines = [
+          `无极军团 4.0 配方表（${value.leader_families.length} 个主帅族，${list.length} 条${args?.domain ? `，已按 ${args.domain} 过滤` : ''}）：`,
+          '',
+        ];
+        for (const r of list) {
+          lines.push(`【${r.family}】${r.id}`);
+          lines.push(`  领域：${(r.domains ?? []).join('、') || '—'}`);
+          lines.push(`  意图：${(r.typed_intents ?? []).join('、') || '—'}`);
+          lines.push(`  成员：${(r.members ?? []).join('、') || '—'}`);
+          lines.push('');
+        }
+        return [{ type: 'text', text: lines.join('\n') }];
+      },
+    },
+    execute(args) {
+      const all = RECIPE_TABLE.recipes ?? [];
+      const filtered = args.domain
+        ? all.filter((r) => (r.domains ?? []).includes(args.domain))
+        : all;
+      return Promise.resolve({
+        leader_families: RECIPE_TABLE.leader_families ?? [],
+        recipes: filtered,
+      });
     },
   }));
 }

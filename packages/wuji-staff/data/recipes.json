@@ -1,0 +1,574 @@
+{
+  "source": "wuji-legion-codex-4.0/catalog/p3/delegation-manifest.json",
+  "leader_families": [
+    "comfyui",
+    "software",
+    "bugfix",
+    "research",
+    "writing",
+    "office",
+    "data",
+    "web",
+    "image",
+    "video",
+    "audio",
+    "business",
+    "learning",
+    "automation",
+    "publish",
+    "governance"
+  ],
+  "recipes": [
+    {
+      "id": "meta-instruction-revision",
+      "leader": "leader/prompt-governance",
+      "family": "governance",
+      "domains": [
+        "governance",
+        "prompt_meta"
+      ],
+      "typed_intents": [
+        "meta_instruction",
+        "prompt_engineering",
+        "instruction_revision"
+      ],
+      "members": [
+        "requirement-decomposition",
+        "evolution-review"
+      ],
+      "acceptance": [
+        "goal-explicit",
+        "deliverables-explicit",
+        "impact-and-reversal-identified"
+      ]
+    },
+    {
+      "id": "research-decision",
+      "leader": "leader/research-decision",
+      "family": "research",
+      "domains": [
+        "research"
+      ],
+      "typed_intents": [
+        "research",
+        "source_review",
+        "technology_selection",
+        "compatibility_analysis"
+      ],
+      "members": [
+        "research",
+        "knowledge-base-qa"
+      ],
+      "acceptance": [
+        "primary-sources-or-known-gap",
+        "counterevidence-addressed",
+        "version-scope-stated"
+      ]
+    },
+    {
+      "id": "software-delivery",
+      "leader": "leader/software-delivery",
+      "family": "software",
+      "domains": [
+        "software",
+        "engineering"
+      ],
+      "typed_intents": [
+        "code_change",
+        "software_review",
+        "implementation"
+      ],
+      "members": [
+        "software-reverse",
+        "software-architecture",
+        "code-implementation",
+        "python-engineer",
+        "rust-engineer",
+        "go-engineer",
+        "cpp-engineer",
+        "code-review"
+      ],
+      "acceptance": [
+        "scope-locked",
+        "write-set-unique",
+        "regression-or-review-evidence"
+      ]
+    },
+    {
+      "id": "bugfix-delivery",
+      "leader": "lead.bugfix",
+      "family": "bugfix",
+      "domains": [
+        "bugfix",
+        "engineering"
+      ],
+      "typed_intents": [
+        "bug_fix",
+        "root_cause",
+        "regression_fix",
+        "incident_diagnosis"
+      ],
+      "members": [
+        "code-repair",
+        "incident-diagnosis",
+        "code-review",
+        "delivery-acceptance"
+      ],
+      "acceptance": [
+        "reproduction-or-known-gap",
+        "root-cause-recorded",
+        "regression-evidence"
+      ]
+    },
+    {
+      "id": "comfyui-delivery",
+      "leader": "lead.comfyui",
+      "family": "comfyui",
+      "domains": [
+        "comfyui"
+      ],
+      "typed_intents": [
+        "comfyui_analysis",
+        "comfyui_workflow",
+        "comfyui_node",
+        "comfyui_fusion",
+        "comfyui_packaging",
+        "comfyui_verification"
+      ],
+      "members": [
+        "ai-workflow-engineer",
+        "comfyui-reverse",
+        "comfyui-workflow",
+        "comfyui-python-node",
+        "comfyui-rust-extension",
+        "comfyui-go-integration",
+        "comfyui-cpp-kernel",
+        "comfyui-packaging",
+        "comfyui-debug-performance",
+        "comfyui-test-verification",
+        "comfyui-distillation"
+      ],
+      "acceptance": [
+        "authorized-inputs",
+        "actual-registry-or-known-gap",
+        "workflow-and-runtime-evidence"
+      ]
+    },
+    {
+      "id": "office-delivery",
+      "leader": "lead.office",
+      "family": "office",
+      "domains": [
+        "office",
+        "documents"
+      ],
+      "typed_intents": [
+        "document",
+        "word",
+        "spreadsheet",
+        "presentation",
+        "pdf",
+        "office_render"
+      ],
+      "members": [
+        "document-deck",
+        "data-analysis",
+        "delivery-acceptance"
+      ],
+      "acceptance": [
+        "editable-source-preserved",
+        "format-scope-stated",
+        "render-or-known-gap"
+      ]
+    },
+    {
+      "id": "writing-delivery",
+      "leader": "lead.writing",
+      "family": "writing",
+      "domains": [
+        "writing",
+        "content"
+      ],
+      "typed_intents": [
+        "article",
+        "fiction",
+        "copywriting",
+        "scriptwriting",
+        "translation",
+        "structural_edit",
+        "topic_selection"
+      ],
+      "members": [
+        "writing",
+        "screenwriter",
+        "video-copywriter",
+        "multi-platform-distribution",
+        "topic-selection",
+        "comic-storyboard"
+      ],
+      "acceptance": [
+        "brief-and-audience-locked",
+        "facts-or-setting-scoped",
+        "style-and-format-checked"
+      ]
+    },
+    {
+      "id": "web-frontend-delivery",
+      "leader": "lead.web",
+      "family": "web",
+      "domains": [
+        "web",
+        "frontend"
+      ],
+      "typed_intents": [
+        "frontend",
+        "webapp",
+        "interface",
+        "interaction",
+        "browser_qa"
+      ],
+      "members": [
+        "frontend-visual",
+        "code-review",
+        "file-operations"
+      ],
+      "acceptance": [
+        "behavior-scope-locked",
+        "actual-page-check",
+        "write-set-unique"
+      ]
+    },
+    {
+      "id": "web-workbench-delivery",
+      "leader": "lead.web",
+      "family": "web",
+      "domains": [
+        "workbench"
+      ],
+      "typed_intents": [
+        "workbench",
+        "dashboard_ui",
+        "offline_export",
+        "tool_interface"
+      ],
+      "members": [
+        "workbench-builder",
+        "frontend-visual",
+        "dashboard-review",
+        "file-operations"
+      ],
+      "acceptance": [
+        "functional-path-checked",
+        "data-contract-stated",
+        "offline-or-export-evidence"
+      ]
+    },
+    {
+      "id": "image-delivery",
+      "leader": "lead.image",
+      "family": "image",
+      "domains": [
+        "image",
+        "visual"
+      ],
+      "typed_intents": [
+        "image_generation",
+        "image_edit",
+        "visual_asset",
+        "style_direction"
+      ],
+      "members": [
+        "image-creation",
+        "art-director"
+      ],
+      "acceptance": [
+        "visual-brief-locked",
+        "rights-and-inputs-stated",
+        "artifact-review"
+      ]
+    },
+    {
+      "id": "video-production-delivery",
+      "leader": "lead.video",
+      "family": "video",
+      "domains": [
+        "video"
+      ],
+      "typed_intents": [
+        "video_production",
+        "short_video",
+        "film",
+        "narrative_video"
+      ],
+      "members": [
+        "video-production",
+        "studio-producer",
+        "screenwriter",
+        "visual-storyboard",
+        "art-director",
+        "media-quality-review"
+      ],
+      "acceptance": [
+        "story-and-shot-scope",
+        "rights-and-source-lock",
+        "timeline-or-known-gap"
+      ]
+    },
+    {
+      "id": "video-studio-delivery",
+      "leader": "lead.video",
+      "family": "video",
+      "domains": [
+        "studio_video"
+      ],
+      "typed_intents": [
+        "studio_production",
+        "series_video",
+        "video_preproduction",
+        "creative_direction"
+      ],
+      "members": [
+        "studio-producer",
+        "writing",
+        "screenwriter",
+        "visual-storyboard",
+        "art-director"
+      ],
+      "acceptance": [
+        "series-bible-or-brief",
+        "creative-scope-locked",
+        "production-handoff"
+      ]
+    },
+    {
+      "id": "video-post-production",
+      "leader": "lead.video",
+      "family": "video",
+      "domains": [
+        "post_production"
+      ],
+      "typed_intents": [
+        "post_production",
+        "timeline_edit",
+        "subtitle_timing",
+        "color_finishing",
+        "export_qa"
+      ],
+      "members": [
+        "post-production",
+        "media-quality-review",
+        "visual-storyboard"
+      ],
+      "acceptance": [
+        "source-assets-locked",
+        "timeline-and-export-scope",
+        "delivery-review"
+      ]
+    },
+    {
+      "id": "audio-delivery",
+      "leader": "lead.audio",
+      "family": "audio",
+      "domains": [
+        "audio",
+        "sound"
+      ],
+      "typed_intents": [
+        "voiceover",
+        "music_production",
+        "sound_design",
+        "mix_mastering",
+        "audio_alignment"
+      ],
+      "members": [
+        "voice-audio",
+        "media-quality-review"
+      ],
+      "acceptance": [
+        "track-and-time-scope",
+        "rights-and-source-lock",
+        "mix-or-known-gap"
+      ]
+    },
+    {
+      "id": "business-delivery",
+      "leader": "lead.business",
+      "family": "business",
+      "domains": [
+        "business"
+      ],
+      "typed_intents": [
+        "requirement_analysis",
+        "proposal",
+        "quotation",
+        "contract_risk",
+        "delivery_management",
+        "studio_positioning"
+      ],
+      "members": [
+        "business-library",
+        "requirement-decomposition",
+        "studio-owner",
+        "client-proposal",
+        "contract-risk",
+        "delivery-acceptance"
+      ],
+      "acceptance": [
+        "scope-and-assumptions",
+        "commercial-risk-stated",
+        "delivery-criteria-explicit"
+      ]
+    },
+    {
+      "id": "learning-delivery",
+      "leader": "lead.learning",
+      "family": "learning",
+      "domains": [
+        "learning",
+        "education"
+      ],
+      "typed_intents": [
+        "course",
+        "lesson",
+        "exercise",
+        "learning_review",
+        "template_curation"
+      ],
+      "members": [
+        "learning-coach",
+        "course-design",
+        "template-curator",
+        "requirement-decomposition"
+      ],
+      "acceptance": [
+        "learner-outcome-measurable",
+        "materials-and-exercises-linked",
+        "review-path-defined"
+      ]
+    },
+    {
+      "id": "automation-delivery",
+      "leader": "lead.automation",
+      "family": "automation",
+      "domains": [
+        "automation"
+      ],
+      "typed_intents": [
+        "automation",
+        "workflow_design",
+        "scheduled_action",
+        "connector_integration"
+      ],
+      "members": [
+        "automation-design",
+        "file-operations"
+      ],
+      "acceptance": [
+        "authorization-scoped",
+        "trigger-and-cancel-defined",
+        "actual-receipt-or-known-gap"
+      ]
+    },
+    {
+      "id": "publishing-operations",
+      "leader": "lead.publish",
+      "family": "publish",
+      "domains": [
+        "content_operations"
+      ],
+      "typed_intents": [
+        "content_operations",
+        "distribution",
+        "platform_adaptation",
+        "content_review"
+      ],
+      "members": [
+        "content-operations",
+        "multi-platform-distribution",
+        "delivery-acceptance"
+      ],
+      "acceptance": [
+        "final-materials-locked",
+        "platform-scope-stated",
+        "no-unauthorized-publish"
+      ]
+    },
+    {
+      "id": "publishing-delivery",
+      "leader": "lead.publish",
+      "family": "publish",
+      "domains": [
+        "publish",
+        "release"
+      ],
+      "typed_intents": [
+        "publication_delivery",
+        "release_package",
+        "publishing_connector",
+        "skill_packaging"
+      ],
+      "members": [
+        "publication-delivery",
+        "skill-packager",
+        "delivery-acceptance"
+      ],
+      "acceptance": [
+        "authorization-explicit",
+        "package-or-draft-reproducible",
+        "publish-receipt-or-known-gap"
+      ]
+    },
+    {
+      "id": "data-delivery",
+      "leader": "lead.data",
+      "family": "data",
+      "domains": [
+        "data",
+        "analytics"
+      ],
+      "typed_intents": [
+        "data_analysis",
+        "statistics",
+        "dashboard",
+        "metric_definition",
+        "business_review"
+      ],
+      "members": [
+        "dashboard-review",
+        "data-analysis",
+        "business-library"
+      ],
+      "acceptance": [
+        "data-scope-and-metric-lock",
+        "calculation-traceable",
+        "chart-or-conclusion-reviewed"
+      ]
+    },
+    {
+      "id": "governance-evolution",
+      "leader": "lead.governance",
+      "family": "governance",
+      "domains": [
+        "governance",
+        "evolution"
+      ],
+      "typed_intents": [
+        "skill_evolution",
+        "capability_intake",
+        "fusion_review",
+        "experience_curation",
+        "release_audit"
+      ],
+      "members": [
+        "evolution-review",
+        "skill-packager",
+        "knowledge-base-qa"
+      ],
+      "acceptance": [
+        "source-and-scope-bound",
+        "regression-and-reversal",
+        "release-state-honest"
+      ]
+    }
+  ]
+}

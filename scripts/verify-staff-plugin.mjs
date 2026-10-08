@@ -45,8 +45,16 @@ check("从 dsh-tools 引入 defineTool", /import\s*\{\s*defineTool\s*\}\s*from\s
 check("声明 name 导出", /export const name\s*=/.test(staffIndex));
 check("声明 inject 含 tools", /export const inject\s*=\s*\[[^\]]*'tools'/.test(staffIndex));
 check("apply 使用 ctx.tools.register", /ctx\.tools\.register\(/.test(staffIndex));
-check("注册了两个工具", (staffIndex.match(/ctx\.tools\.register\(/g) ?? []).length === 2);
-check("工具名符合无前缀习惯", /name:\s*'wuji_staff_plan'/.test(staffIndex) && /name:\s*'wuji_staff_select'/.test(staffIndex));
+// 工具数量会随功能增长，因此断言「有一个合理的下限」而不是写死数字 ——
+// 写死会在每次加工具时误报（本次加 wuji_staff_recipes 就触发了）。
+const toolCount = (staffIndex.match(/ctx\.tools\.register\(/g) ?? []).length;
+check(`注册了工具（当前 ${toolCount} 个，至少 3 个）`, toolCount >= 3);
+check(
+  "工具名符合约定",
+  /name:\s*'wuji_staff_plan'/.test(staffIndex) &&
+    /name:\s*'wuji_staff_select'/.test(staffIndex) &&
+    /name:\s*'wuji_staff_recipes'/.test(staffIndex),
+);
 
 console.log('');
 console.log('--- 核心模块可被导入并工作 ---');
