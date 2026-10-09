@@ -1,0 +1,588 @@
+#!/usr/bin/env node
+/**
+ * t2-validate-frontmatter.mjs
+ *
+ * 按 t1-frontmatter-findings.md 的结论，离线校验 skills 根目录下所有 <name>/SKILL.md
+ * 的 YAML frontmatter，在「运行前」就把会被 host 静默丢弃的 skill 提前揪出来。
+ *
+ * ── 修订记录（v2，2026-10-08）─────────────────────────────────────────────
+ * 独立评审（t3）实测确认 v1 存在 4 个缺陷，根因是「自研窄解析器 ≠ host 的完整 yaml 包」：
+ *   D1 假阳性 内联数组引号内逗号被裸切分：["a,b"] 误判 FAIL
+ *   D2 假阳性 metadata 下的合法块状序列被判非法
+ *   D3 假阴性 Tab 缩进（非法）被 trimStart() 吃掉，误判 PASS
+ *   D4 假阳性 锚点/别名被一律拒绝，host 实际接受
+ * 决定性证据：dsh-skill-filesystem/lib/index.js:7 → `import { parse } from "yaml";`
+ *
+ * v2 修订：**改用与 host 同一个 `yaml` 包**，一个改动同时消除 D1/D2/D3/D4。
+ *   解析器解析结果即 host 判定 —— 校验器与 host 在原理上不再可能不等价。
+ *   搜索顺序：显式 --yaml <dir> → 已知 DSH 依赖树 → 常规 node_modules → 报错退出 3。
+ *
+ * 用法:
+ *   node t2-validate-frontmatter.mjs <skillsRoot> [--json] [--yaml <node_modules目录>]
+ *
+ * 退出码: 全过 = 0，有失败 = 1，用法错误 = 2，yaml 包不可用 = 3
+ */
+
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { join, resolve, basename } from "node:path";
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
+
+// ---------------------------------------------------------------------------
+// 解析器解析：用 host 同一个 yaml 包（v2 修订核心）
+// ---------------------------------------------------------------------------
+
+/** 已知的 DSH 依赖树候选路径（host 就是从这些位置加载 yaml 的）。 */
+function yamlCandidates(explicitDir) {
+  const out = [];
+  if (explicitDir) out.push(resolve(explicitDir));
+  if (process.env.DSH_YAML_DIR) out.push(resolve(process.env.DSH_YAML_DIR));
+  const dshHome = process.env.DSH_HOME || join(process.env.USERPROFILE || process.env.HOME || "", ".dsh");
+  out.push(join(dshHome, "profiles", "node_modules"));
+  out.push(join(dshHome, "profiles", "node_modules", "@deepseek-ai", "dsh-skill-filesystem", "node_modules"));
+  return out;
+}
+
+/** 解析出与 host 等价的 YAML parse 函数；找不到则明确失败（不静默降级）。 */
+async function loadHostYaml(explicitDir) {
+  const tried = [];
+  for (const dir of yamlCandidates(explicitDir)) {
+    if (!dir || !existsSync(dir)) { tried.push(`${dir} (目录不存在)`); continue; }
+    try {
+      const req = createRequire(join(dir, "noop.js"));
+      const entry = req.resolve("yaml");
+      const mod = await import(pathToFileURL(entry).href);
+      const parse = mod.parse || (mod.default && mod.default.parse);
+      if (typeof parse !== "function") { tried.push(`${dir} (yaml 无 parse 导出)`); continue; }
+      return { parse, version: tryVersion(req), entry };
+    } catch (e) {
+      tried.push(`${dir} (${e.code || e.message})`);
+    }
+  }
+  return { error: tried };
+}
+
+function tryVersion(req) {
+  try { return req("yaml/package.json").version; } catch { return "?"; }
+}
+
+// ---------------------------------------------------------------------------
+// 契约常量（全部来自 t1 调研结论，逐条标注出处）
+// ---------------------------------------------------------------------------
+
+/** t1 §1 / J:850-852 —— 驼峰历史别名 -> 正确写法。命中即 throw，整条 skill 被丢弃。 */
+const LEGACY_KEYS = new Map([
+  ["disableModelInvocation", "disable-model-invocation"],
+  ["modelInvocable", "disable-model-invocation"],
+  ["userInvocable", "user-invocable"],
+]);
+
+/** t1 §1 —— 必填字段（J:679-684，缺失或空串即整条丢弃）。 */
+const REQUIRED_KEYS = ["name", "description"];
+
+/** t1 §1 —— 已声明的可选字段。 */
+const KNOWN_OPTIONAL_KEYS = [
+  "whenToUse",
+  "metadata",
+  "disable-model-invocation",
+  "user-invocable",
+];
+
+/** t1 §1 / S:17 —— name 的 kebab-case 正则。 */
+const SKILL_NAME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/**
+ * t1 §2.3 / J:863-877 —— 布尔字段的严格合法取值。
+ * 接受 YAML 原生 true/false、数字 1/0、字符串 "1"/"0"，
+ * 以及大小写不敏感的 true/false、yes/no、on/off。
+ */
+const BOOL_TRUE = new Set(["true", "yes", "on", "1"]);
+const BOOL_FALSE = new Set(["false", "no", "off", "0"]);
+
+/** t1 §2.4 / J:783 —— 定界符必须恰好等于 "---"（首行与闭合行都是）。 */
+const DELIM = "---";
+
+// ---------------------------------------------------------------------------
+// 窄 YAML 解析器
+// ---------------------------------------------------------------------------
+
+/** 去掉行尾注释（只在 # 前有空白、且不在引号内时才算注释）。 */
+function stripComment(line) {
+  let inSingle = false;
+  let inDouble = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === "'" && !inDouble) inSingle = !inSingle;
+    else if (ch === '"' && !inSingle) inDouble = !inDouble;
+    else if (ch === "#" && !inSingle && !inDouble) {
+      if (i === 0 || /\s/.test(line[i - 1])) return line.slice(0, i);
+    }
+  }
+  return line;
+}
+
+/** 解析标量：布尔 / null / 数字 / 引号字符串 / 裸字符串。返回 {ok, value}。 */
+function parseScalar(raw) {
+  const s = raw.trim();
+  if (s === "") return { ok: true, value: "" };
+  if (s.startsWith('"')) {
+    if (!s.endsWith('"') || s.length < 2) return { ok: false, reason: "unterminated double-quoted string" };
+    try {
+      return { ok: true, value: JSON.parse(s) };
+    } catch {
+      return { ok: false, reason: "invalid double-quoted string escape" };
+    }
+  }
+  if (s.startsWith("'")) {
+    if (!s.endsWith("'") || s.length < 2) return { ok: false, reason: "unterminated single-quoted string" };
+    return { ok: true, value: s.slice(1, -1).replace(/''/g, "'") };
+  }
+  const low = s.toLowerCase();
+  if (low === "true") return { ok: true, value: true };
+  if (low === "false") return { ok: true, value: false };
+  if (low === "null" || s === "~") return { ok: true, value: null };
+  if (/^-?\d+$/.test(s)) return { ok: true, value: Number(s) };
+  if (/^-?\d*\.\d+$/.test(s)) return { ok: true, value: Number(s) };
+  if (s.startsWith("[")) {
+    if (!s.endsWith("]")) return { ok: false, reason: "unterminated inline sequence" };
+    const inner = s.slice(1, -1).trim();
+    if (inner === "") return { ok: true, value: [] };
+    const out = [];
+    for (const part of inner.split(",")) {
+      const r = parseScalar(part);
+      if (!r.ok) return r;
+      out.push(r.value);
+    }
+    return { ok: true, value: out };
+  }
+  if (s.startsWith("{")) {
+    if (!s.endsWith("}")) return { ok: false, reason: "unterminated inline mapping" };
+    const inner = s.slice(1, -1).trim();
+    if (inner === "") return { ok: true, value: {} };
+    const out = {};
+    for (const part of inner.split(",")) {
+      const idx = part.indexOf(":");
+      if (idx < 0) return { ok: false, reason: "invalid inline mapping entry" };
+      const k = part.slice(0, idx).trim().replace(/^["']|["']$/g, "");
+      const r = parseScalar(part.slice(idx + 1));
+      if (!r.ok) return r;
+      out[k] = r.value;
+    }
+    return { ok: true, value: out };
+  }
+  if (s.startsWith("&") || s.startsWith("*")) {
+    return { ok: false, reason: "YAML anchors/aliases are not supported by this validator's parser" };
+  }
+  return { ok: true, value: s };
+}
+
+/** 按缩进递归解析块状映射。返回 {ok, value} 或 {ok:false, reason}。 */
+function parseBlock(lines, start, indent) {
+  const map = {};
+  let i = start;
+  while (i < lines.length) {
+    const rawLine = lines[i];
+    if (rawLine.trim() === "") {
+      i++;
+      continue;
+    }
+    const indentOf = rawLine.length - rawLine.trimStart().length;
+    if (indentOf < indent) break;
+    if (indentOf > indent) return { ok: false, reason: `unexpected indentation at line ${i + 1}` };
+
+    const content = stripComment(rawLine.trim()).trimEnd();
+    if (content === "") {
+      i++;
+      continue;
+    }
+    if (content.startsWith("- ")) {
+      return { ok: false, reason: `top-level sequences are not valid frontmatter here (line ${i + 1})` };
+    }
+    const colon = content.indexOf(":");
+    if (colon < 0) return { ok: false, reason: `expected "key: value" at line ${i + 1}` };
+
+    const key = content.slice(0, colon).trim().replace(/^["']|["']$/g, "");
+    const rest = content.slice(colon + 1).trim();
+    if (key === "") return { ok: false, reason: `empty key at line ${i + 1}` };
+
+    // 块标量: `key: |` / `key: >` / `key: |-` … 收集后续更深缩进的行作为字面量。
+    const blockMatch = /^([|>])([+-]?)(\d*)$/.exec(rest);
+    if (blockMatch) {
+      const style = blockMatch[1];
+      const chomp = blockMatch[2];
+      const collected = [];
+      let j = i + 1;
+      let blockIndent = -1;
+      while (j < lines.length) {
+        const l = lines[j];
+        if (l.trim() === "") {
+          collected.push("");
+          j++;
+          continue;
+        }
+        const ind = l.length - l.trimStart().length;
+        if (blockIndent < 0) {
+          if (ind <= indent) break;
+          blockIndent = ind;
+        } else if (ind < blockIndent) break;
+        collected.push(l.slice(blockIndent));
+        j++;
+      }
+      while (collected.length > 0 && collected[collected.length - 1] === "") collected.pop();
+      let value = style === "|" ? collected.join("\n") : collected.join(" ").replace(/\s+/g, " ").trim();
+      if (chomp !== "-") value += "\n";
+      map[key] = value;
+      i = j;
+      continue;
+    }
+
+    if (rest === "") {
+      // 可能是嵌套映射，也可能是空值；看下一非空行是否更深缩进。
+      let j = i + 1;
+      while (j < lines.length && lines[j].trim() === "") j++;
+      if (j < lines.length) {
+        const nextIndent = lines[j].length - lines[j].trimStart().length;
+        if (nextIndent > indent) {
+          const sub = parseBlock(lines, j, nextIndent);
+          if (!sub.ok) return sub;
+          map[key] = sub.value;
+          i = sub.next;
+          continue;
+        }
+      }
+      map[key] = null;
+      i++;
+      continue;
+    }
+
+    const sc = parseScalar(rest);
+    if (!sc.ok) return { ok: false, reason: `${sc.reason} (line ${i + 1})` };
+    map[key] = sc.value;
+    i++;
+  }
+  return { ok: true, value: map, next: i };
+}
+
+/**
+ * 从文件文本里提取并解析 frontmatter。
+ * 严格复刻 t1 §2.4 的定界规则：首行去掉 \r 后必须恰好等于 "---"，
+ * 向下找同样恰好等于 "---" 的行作为闭合；找不到即「无 frontmatter」。
+ *
+ * v2：解析改用 host 同一个 `yaml` 包（由调用方通过 setYamlParser 注入），
+ *     彻底消除 v1 自研窄解析器与 host 不等价导致的双向偏差。
+ * 返回 {status: "ok"|"missing"|"yaml-error"|"not-object", ...}
+ */
+let HOST_PARSE = null;
+
+/** 注入 host 的 yaml parse 函数。未注入时抛错，不静默降级回窄解析器。 */
+function setYamlParser(parse) {
+  HOST_PARSE = parse;
+}
+
+function extractFrontmatter(text) {
+  if (typeof HOST_PARSE !== "function") {
+    throw new Error("host yaml parser not injected (call setYamlParser first)");
+  }
+  const lines = text.split("\n");
+  if (lines.length === 0 || lines[0].replace(/\r$/, "") !== DELIM) {
+    return { status: "missing", reason: "first line is not exactly ---" };
+  }
+  let close = -1;
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i].replace(/\r$/, "") === DELIM) {
+      close = i;
+      break;
+    }
+  }
+  if (close < 0) {
+    return { status: "missing", reason: "no closing --- line found" };
+  }
+  const bodyText = lines.slice(1, close).join("\n");
+  if (bodyText.trim() === "") {
+    return { status: "not-object", reason: "frontmatter is empty" };
+  }
+  let parsed;
+  try {
+    // 用 host 的解析器。选项与 host 一致：默认 schema，允许普通 YAML 全部特性
+    // （锚点/别名、块状序列、引号内逗号、块标量等），从而使判定与 host 等价。
+    parsed = HOST_PARSE(bodyText);
+  } catch (e) {
+    return { status: "yaml-error", reason: String(e && e.message ? e.message : e) };
+  }
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    return { status: "not-object", reason: "parsed frontmatter is not a mapping" };
+  }
+  return { status: "ok", data: parsed };
+}
+
+// ---------------------------------------------------------------------------
+// 校验规则
+// ---------------------------------------------------------------------------
+
+function isNonEmptyString(v) {
+  return typeof v === "string" && v.length > 0;
+}
+
+function checkBoolean(rawValue) {
+  if (typeof rawValue === "boolean") return { ok: true, value: rawValue };
+  if (typeof rawValue === "number") {
+    if (rawValue === 1) return { ok: true, value: true };
+    if (rawValue === 0) return { ok: true, value: false };
+    return { ok: false };
+  }
+  if (typeof rawValue === "string") {
+    const low = rawValue.trim().toLowerCase();
+    if (BOOL_TRUE.has(low)) return { ok: true, value: true };
+    if (BOOL_FALSE.has(low)) return { ok: true, value: false };
+    return { ok: false };
+  }
+  return { ok: false };
+}
+
+function typeName(v) {
+  if (v === null) return "null";
+  if (Array.isArray(v)) return "array";
+  return typeof v;
+}
+
+/**
+ * 校验一个 SKILL.md。返回 { errors: [], warnings: [], infos: [] }
+ * errors = 会导致整条 skill 被 host 丢弃；warnings = 字段被丢弃但 skill 存活。
+ */
+function validateSkill(filePath, dirName) {
+  const errors = [];
+  const warnings = [];
+  const infos = [];
+
+  let text;
+  try {
+    text = readFileSync(filePath, "utf8");
+  } catch (e) {
+    return { errors: [`cannot read file: ${e.message}`], warnings, infos };
+  }
+
+  // t1 §2.4 / J:780-805
+  const fm = extractFrontmatter(text);
+  if (fm.status === "missing") {
+    errors.push(`missing YAML frontmatter (${fm.reason}) -> whole skill dropped [t1 §2.4 / J:675-678, J:780-786]`);
+    return { errors, warnings, infos };
+  }
+  if (fm.status === "not-object") {
+    errors.push(`frontmatter is not a YAML mapping (${fm.reason}) -> whole skill dropped [t1 §2.4 / J:788]`);
+    return { errors, warnings, infos };
+  }
+  if (fm.status === "yaml-error") {
+    errors.push(`invalid YAML frontmatter: ${fm.reason} -> whole skill dropped [t1 §2.3 / J:669-674]`);
+    return { errors, warnings, infos };
+  }
+
+  const data = fm.data;
+
+  // t1 §1 / J:679-684 —— 必填字段
+  const name = isNonEmptyString(data.name) ? data.name : undefined;
+  const description = isNonEmptyString(data.description) ? data.description : undefined;
+
+  for (const key of REQUIRED_KEYS) {
+    if (!Object.hasOwn(data, key)) {
+      errors.push(`missing required field "${key}" -> whole skill dropped [t1 §1 / J:679-684]`);
+    } else if (!isNonEmptyString(data[key])) {
+      errors.push(
+        `required field "${key}" must be a non-empty string (got ${typeName(data[key])}) -> whole skill dropped [t1 §1 / J:679-684, J:841-844]`
+      );
+    }
+  }
+
+  // t1 §1 / S:17,29-31 —— name 必须 kebab-case
+  if (name !== undefined && !SKILL_NAME_RE.test(name)) {
+    errors.push(
+      `invalid skill name "${name}": must match ${SKILL_NAME_RE} (lowercase alnum, single hyphens, no leading/trailing hyphen) -> whole skill dropped [t1 §1 / J:685-688; S:17]`
+    );
+  }
+
+  // t1 §2.2(a) / J:849-862 —— 历史驼峰别名：throw，整条 skill 被拒绝
+  // D6 修复：本检查已移到此处的 name 格式检查之后，与 host 顺序对齐
+  // （host: J:679-684 required -> J:685-688 name 格式 -> J:691 parseInvocationPolicy J:849-862 legacy）。
+  for (const [legacy, canonical] of LEGACY_KEYS) {
+    if (Object.hasOwn(data, legacy)) {
+      errors.push(
+        `frontmatter field "${legacy}" is unsupported; use "${canonical}" -> throw, whole skill dropped [t1 §2.2(a) / J:849-862]`
+      );
+    }
+  }
+
+  // 目录名与 name 不一致：host 不强制，但对排障有价值
+  if (name !== undefined && dirName !== undefined && name !== dirName) {
+    infos.push(`name "${name}" differs from directory name "${dirName}" (host does not enforce this) [t1 §4 未覆盖项]`);
+  }
+
+  // t1 §2.3 / J:845-848 —— whenToUse 类型错：只丢字段
+  if (Object.hasOwn(data, "whenToUse") && !isNonEmptyString(data.whenToUse)) {
+    warnings.push(
+      `"whenToUse" must be a non-empty string (got ${typeName(data.whenToUse)}); field silently dropped, skill still loads [t1 §2.3 / J:845-848]`
+    );
+  }
+
+  // t1 §2.3 / J:879-883 —— metadata 类型错：只丢字段
+  if (Object.hasOwn(data, "metadata")) {
+    const m = data.metadata;
+    if (typeof m !== "object" || m === null || Array.isArray(m)) {
+      warnings.push(
+        `"metadata" must be a mapping (got ${typeName(m)}); field silently dropped, skill still loads [t1 §2.3 / J:879-883]`
+      );
+    }
+  }
+
+  // t1 §2.3 / J:863-877 —— 布尔字段：非法值 throw，整条丢弃
+  for (const key of ["disable-model-invocation", "user-invocable"]) {
+    if (!Object.hasOwn(data, key)) continue;
+    const r = checkBoolean(data[key]);
+    if (!r.ok) {
+      errors.push(
+        `"${key}" must be a boolean (got ${JSON.stringify(data[key])} / ${typeName(data[key])}); accepted: true/false, 1/0, "1"/"0", yes/no, on/off (case-insensitive) -> throw TypeError, whole skill dropped [t1 §2.3 / J:863-877]`
+      );
+    } else {
+      const meaning =
+        key === "disable-model-invocation"
+          ? r.value
+            ? "model-invocation DISABLED"
+            : "model-invocation ENABLED (default)"
+          : r.value
+            ? "user-invocation ENABLED (default)"
+            : "user-invocation DISABLED";
+      infos.push(`${key}=${r.value} -> ${meaning} [t1 §2.3 / J:856-857]`);
+    }
+  }
+
+  // t1 §2.2(b) / J:841-883 —— 未知键静默忽略，不报错
+  const known = new Set([...REQUIRED_KEYS, ...KNOWN_OPTIONAL_KEYS]);
+  for (const key of Object.keys(data)) {
+    if (!known.has(key) && !LEGACY_KEYS.has(key)) {
+      infos.push(
+        `unknown key "${key}" is silently ignored by the host (no whitelist check) [t1 §2.2(b) / J:841-883]`
+      );
+    }
+  }
+
+  return { errors, warnings, infos };
+}
+
+// ---------------------------------------------------------------------------
+// 主流程
+// ---------------------------------------------------------------------------
+
+function main(argv) {
+  const args = argv.slice(2);
+  const jsonMode = args.includes("--json");
+  const yamlIdx = args.indexOf("--yaml");
+  const yamlDir = yamlIdx >= 0 ? args[yamlIdx + 1] : null;
+  // 过滤掉 --yaml 及其取值，避免被当成 skillsRoot
+  const positional = args.filter((a, i) => !a.startsWith("--") && !(yamlIdx >= 0 && i === yamlIdx + 1));
+  const root = positional[0];
+
+  if (!root) {
+    process.stderr.write("usage: node t2-validate-frontmatter.mjs <skillsRoot> [--json] [--yaml <node_modules目录>]\n");
+    return 2;
+  }
+
+  const rootAbs = resolve(root);
+  let entries;
+  try {
+    entries = readdirSync(rootAbs, { withFileTypes: true });
+  } catch (e) {
+    process.stderr.write(`cannot read skills root "${rootAbs}": ${e.message}\n`);
+    return 2;
+  }
+
+  const dirs = entries
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort();
+
+  const results = [];
+  let missingFiles = 0;
+
+  for (const dirName of dirs) {
+    const skillPath = join(rootAbs, dirName, "SKILL.md");
+    let st;
+    try {
+      st = statSync(skillPath);
+    } catch {
+      missingFiles++;
+      results.push({ dirName, skillPath, status: "NO_FILE", errors: [], warnings: [], infos: [] });
+      continue;
+    }
+    if (!st.isFile()) {
+      missingFiles++;
+      results.push({ dirName, skillPath, status: "NO_FILE", errors: [], warnings: [], infos: [] });
+      continue;
+    }
+    const r = validateSkill(skillPath, dirName);
+    results.push({
+      dirName,
+      skillPath,
+      status: r.errors.length === 0 ? "PASS" : "FAIL",
+      errors: r.errors,
+      warnings: r.warnings,
+      infos: r.infos,
+    });
+  }
+
+  const total = results.length;
+  const passed = results.filter((r) => r.status === "PASS").length;
+  const failed = total - passed;
+
+  if (jsonMode) {
+    process.stdout.write(JSON.stringify({ root: rootAbs, total, passed, failed, results }, null, 2) + "\n");
+    return failed === 0 ? 0 : 1;
+  }
+
+  const out = [];
+  out.push(`skills root: ${rootAbs}`);
+  out.push(`scanned: ${total} director${total === 1 ? "y" : "ies"} (expecting <name>/SKILL.md)`);
+  out.push("");
+
+  for (const r of results) {
+    const line = `[${r.status === "NO_FILE" ? "SKIP" : r.status}] ${r.dirName}/SKILL.md`;
+    out.push(line);
+    if (r.status === "NO_FILE") {
+      out.push(`    - no SKILL.md in this directory`);
+    }
+    for (const e of r.errors) out.push(`    - ERROR: ${e}`);
+    for (const w of r.warnings) out.push(`    - WARN:  ${w}`);
+    for (const i of r.infos) out.push(`    - info:  ${i}`);
+  }
+
+  out.push("");
+  out.push(`TOTAL: ${passed}/${total} passed, ${failed} failed` +
+    (missingFiles > 0 ? `, ${missingFiles} directories skipped (no SKILL.md)` : ""));
+  out.push(
+    failed === 0
+      ? "RESULT: ALL PASS"
+      : "RESULT: FAIL — the host would silently drop the failing skills and the model would see them as nonexistent."
+  );
+
+  process.stdout.write(out.join("\n") + "\n");
+  return failed === 0 ? 0 : 1;
+}
+
+// v2：入口改为 async —— 先加载 host 的 yaml 包，再校验。
+// yaml 不可用时明确退出 3，**不静默降级**回窄解析器（那正是 v1 缺陷的根因）。
+const yamlDirArg = (() => {
+  const a = process.argv.slice(2);
+  const i = a.indexOf("--yaml");
+  return i >= 0 ? a[i + 1] : null;
+})();
+
+const loaded = await loadHostYaml(yamlDirArg);
+if (loaded.error) {
+  process.stderr.write("ERROR: cannot load the `yaml` package that the host itself uses.\n");
+  process.stderr.write("Tried:\n");
+  for (const t of loaded.error) process.stderr.write(`  - ${t}\n`);
+  process.stderr.write("Pass --yaml <node_modules dir> or set DSH_YAML_DIR.\n");
+  process.stderr.write("Refusing to fall back to a hand-rolled parser: it would not be equivalent to the host.\n");
+  process.exit(3);
+}
+setYamlParser(loaded.parse);
+process.stderr.write(`[parser] yaml@${loaded.version} from ${loaded.entry}\n`);
+
+process.exit(main(process.argv));
