@@ -296,6 +296,13 @@
         toolName: subagent
         modelSelectionSettings: true
         backgroundMode: continuable
+        # 四层架构必需：阿极(0) → 参谋部(1) → 主帅(2) → 专家(3)。
+        # dsh-subagent 的 Config 默认 maxDepth=1（见该包 types/index.js:76），
+        # 只允许「顶层 → 子代理」一层委派；不显式提高，主帅就无法再派出专家，
+        # 四层会在 3→4 层被 SubagentDepthError 阻断（实测报错原文：
+        # "subagent depth 2 exceeds maxDepth 1"）。
+        # 3 = 允许链路上最多三层委派，正好容纳四层架构。
+        maxDepth: 3
 
     - id: tool-subagent-fork
       name: '@deepseek-ai/dsh-tool-subagent'
@@ -303,6 +310,7 @@
         provider: fork
         toolName: subagent_fork
         backgroundMode: continuable
+        maxDepth: 3
 
     # Product providers are host-plane singletons. Copy this preset, then
     # remove `disabled` from either ordinary tool row to expose that product
