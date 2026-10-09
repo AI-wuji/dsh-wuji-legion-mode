@@ -1,10 +1,15 @@
 {
   "version": "0.3.0",
-  "generatedBy": "scripts/sync-capability-registry.mjs",
+  "generatedBy": null,
+  "generatedBy_note": "原声明为 scripts/sync-capability-registry.mjs，该脚本已随 wuji-bridge.js 一并删除（见 docs/实现状态.md L43）。本文件目前**无脚本可复现**，为 codex 期历史快照，保留仅供追溯。DSH 版的权威能力口径见 preset 装配与 88 个 SKILL.md。",
   "source": "wuji.exe verify（实测，非手写）",
+  "source_note": "codex 期来源：依赖已废弃的 Go 内核 wuji.exe 与 E:\\wuji-projects\\wuji-capability-sources。DSH 版不沿用该链路，本字段仅存历史。",
+  "stale": true,
+  "stale_reason": "version 记 0.3.0，而当前 bundle 为 0.4.0；且生成脚本已删除。未经重新核验前，本表数字不得作为 DSH 版的完成证据。",
   "lifecycle": "known -> doctrine-only -> assets-retained -> callable -> behavior-verified -> primary",
   "activationFloor": "callable",
   "note": "生命周期取 effectiveStatus（Go 内核判定后的有效状态）。低于 activationFloor 的能力不参与自动激活。",
+  "dsh_note": "上述 lifecycle 与 activationFloor 为 DSH 版仍在沿用的阶梯定义；但本文件中的 effectiveStatus 取值来自 codex 期 Go 内核，未经 DSH 侧复测。",
   "summary": {
     "total": 18,
     "byEffectiveStatus": {
