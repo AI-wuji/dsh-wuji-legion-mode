@@ -17,7 +17,8 @@
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createRequire } from 'node:module';
 
 const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SOURCE_ROOT = 'E:/wuji-projects/wuji-legion-codex-4.0/catalog/p3';
@@ -320,6 +321,83 @@ if (STATS_ONLY) {
 }
 
 // ── 写入或校验 ──────────────────────────────────────────────────────────────
+
+// 生成前先自检：用与 host 同一个 yaml 包解析每个文件的 frontmatter。
+// 为什么放在写入之前：host 对畸形 frontmatter 的处理是「整条 skill 静默消失」
+// （只留一条 warning），写完再查等于把缺陷发出去才发现。前置校验拦在源头。
+// 这是「前置限制 > 后置验证」的一次具体落地。
+const NAME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const LEGACY_KEYS = ['disableModelInvocation', 'modelInvocable', 'userInvocable'];
+
+function validateFrontmatter() {
+  let yamlParse;
+  // 项目目录解析不到 yaml（未安装），故显式从 DSH profiles 的 node_modules 解析。
+  // 必须与 host 用同一个包，否则解析行为可能不同，前置校验就失去意义。
+  const req = createRequire(pathToFileURL(join(repo, 'noop.js')));
+  for (const candidate of [
+    'C:/Users/Administrator/.dsh/profiles/node_modules/yaml',
+    'yaml',
+  ]) {
+    try {
+      ({ parse: yamlParse } = req(candidate));
+      break;
+    } catch { /* 继续找下一个候选 */ }
+  }
+  if (!yamlParse) {
+    console.error('[wuji-roles] 找不到 yaml 包，无法做前置 frontmatter 校验。');
+    console.error('  项目目录解析不到 yaml，请从 DSH profiles 的 node_modules 解析。');
+    process.exit(3);
+  }
+
+  const problems = [];
+  for (const [rel, content] of files) {
+    const m = /^---\r?\n([\s\S]*?)\r?\n---/.exec(content);
+    if (!m) { problems.push(`${rel}: 缺少 frontmatter 分隔符`); continue; }
+    const raw = m[1];
+
+    for (const line of raw.split(/\r?\n/)) {
+      if (/^[\t]/.test(line) || /^[ ]*\t/.test(line)) {
+        problems.push(`${rel}: 缩进含 Tab（host 会解析失败）`);
+        break;
+      }
+    }
+
+    let doc;
+    try {
+      doc = yamlParse(raw);
+    } catch (e) {
+      problems.push(`${rel}: frontmatter 不是合法 YAML —— ${String(e.message).split('\n')[0]}`);
+      continue;
+    }
+    if (doc === null || typeof doc !== 'object') {
+      problems.push(`${rel}: frontmatter 不是键值映射`);
+      continue;
+    }
+
+    const name = doc.name;
+    if (typeof name !== 'string' || !NAME_RE.test(name)) {
+      problems.push(`${rel}: name 不合法（${JSON.stringify(name)}），须匹配 ${NAME_RE}`);
+    }
+    if (typeof doc.description !== 'string' || doc.description.trim() === '') {
+      problems.push(`${rel}: description 缺失或为空`);
+    }
+    for (const key of LEGACY_KEYS) {
+      if (key in doc) {
+        problems.push(`${rel}: 用了驼峰别名 ${key}；host 会【拒绝整条 skill】，须写连字符形式`);
+      }
+    }
+  }
+
+  if (problems.length) {
+    console.error(`[wuji-roles] 前置校验失败，共 ${problems.length} 条，未写入任何文件：`);
+    for (const p of problems) console.error(`  ${p}`);
+    process.exit(4);
+  }
+  console.log(`[wuji-roles] 前置校验通过：${files.size} 个文件的 frontmatter 均为合法且 host 可接受`);
+}
+
+validateFrontmatter();
+
 let mismatched = 0;
 
 for (const outDir of OUT_DIRS) {
