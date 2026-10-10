@@ -54,6 +54,14 @@ docs/dsh-local-profile-backup/
 !.tmp/e2e/review/**
 !.tmp/e2e/layercheck/
 !.tmp/e2e/layercheck/**
+# 三次元指令改写任务的真实产物（苏墨承接）。
+# 教训：这三个目录一度未入库，验证记录里引用了它们，而文件随时可能被清理。
+!.tmp/e2e/qwen-rewrite/
+!.tmp/e2e/qwen-rewrite/**
+!.tmp/e2e/krea-rewrite/
+!.tmp/e2e/krea-rewrite/**
+!.tmp/e2e/scroll-rewrite/
+!.tmp/e2e/scroll-rewrite/**
 
 # 体积大的二进制产物与一次性探测目录仍不入库
 .tmp/e2e/office/*.pdf
