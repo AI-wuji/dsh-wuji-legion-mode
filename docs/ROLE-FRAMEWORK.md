@@ -80,8 +80,8 @@
 | 专家篇幅（全文，含 frontmatter） | **5,540–6,464 B** |
 | 主帅篇幅（正文 / 全文） | 3,464–5,451 B / 3,829–5,918 B |
 | 重写前篇幅 | 约 1,500–2,000 B |
-| 实质内容差异 | 「我负责」「输入契约」「输出」**57/57 全部不同** |
-| 最相似一对 | `frontend-visual` ↔ `workbench-builder`，行重合率 **77.3%** |
+| 实质内容差异 | 「我负责」「输入契约」「输出」**57/57 全部不同**（归一化后仍无近义重复） |
+| 行重合率最高一对 | `content-operations` ↔ `publication-delivery`，**69%**（行 Jaccard，1,596 个配对） |
 | 重合来源 | 全部为通用骨架句（如「猜测输入不是输入」），非领域内容 |
 | 幂等性 | 连跑两次 → `未变: 146` |
 | frontmatter 校验 | **101/101 通过** |
@@ -109,7 +109,8 @@
 2. `scope_rule` / `cancellation` 是**全局约定**，文件中已标注为「通用契约」，**不伪装成该专家独有**。
 3. `## 所用 Skill` 是 **DSH 集成层内容**，上游 `experts.json` 中不含
    `wuji_staff_plan` / `subagent` 等概念（命中 0 次），已在各文件内明确标注。
-4. `domains` / `typed_intents` 来自 `delegation-manifest.json` 的配方定义（各 21 条），
+4. `domains` / `typed_intents` 来自 `delegation-manifest.json` 的配方定义 ——
+   **21 条配方**去重后得到 `domains` **31 个**、`typed_intents` **97 个**，
    **不在** `experts.json` 中。
 5. 上游对 `catalog/p3` 的整体标注是「**契约已写、专业效果未验证**」。
    这批文件证明的是**职责已定义且可被选择**，**不证明该职责已被独立验收**。
