@@ -1,0 +1,244 @@
+{
+  "pairs": [
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-art-director",
+      "line": 0.42857142857142855,
+      "char": 0.5093167701863354
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-automation-design",
+      "line": 0.42857142857142855,
+      "char": 0.4984520123839009
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-business-library",
+      "line": 0.42857142857142855,
+      "char": 0.5125
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-client-proposal",
+      "line": 0.42857142857142855,
+      "char": 0.5236593059936908
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-code-implementation",
+      "line": 0.42857142857142855,
+      "char": 0.5221518987341772
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-code-repair",
+      "line": 0.42857142857142855,
+      "char": 0.5623003194888179
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-code-review",
+      "line": 0.42857142857142855,
+      "char": 0.536741214057508
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-cpp-kernel",
+      "line": 0.42857142857142855,
+      "char": 0.4909090909090909
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-debug-performance",
+      "line": 0.42857142857142855,
+      "char": 0.5368098159509203
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-distillation",
+      "line": 0.42857142857142855,
+      "char": 0.5295950155763239
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-go-integration",
+      "line": 0.42857142857142855,
+      "char": 0.5801282051282052
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-packaging",
+      "line": 0.42857142857142855,
+      "char": 0.5538461538461539
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-python-node",
+      "line": 0.42857142857142855,
+      "char": 0.5590062111801242
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-reverse",
+      "line": 0.42857142857142855,
+      "char": 0.5901639344262295
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-rust-extension",
+      "line": 0.42857142857142855,
+      "char": 0.5379939209726444
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-test-verification",
+      "line": 0.42857142857142855,
+      "char": 0.5508982035928144
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comfyui-workflow",
+      "line": 0.42857142857142855,
+      "char": 0.5362776025236593
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-comic-storyboard",
+      "line": 0.42857142857142855,
+      "char": 0.48787878787878786
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-content-operations",
+      "line": 0.42857142857142855,
+      "char": 0.5180722891566265
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-contract-risk",
+      "line": 0.42857142857142855,
+      "char": 0.5015384615384615
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-course-design",
+      "line": 0.42857142857142855,
+      "char": 0.4969512195121951
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-cpp-engineer",
+      "line": 0.42857142857142855,
+      "char": 0.5573248407643312
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-dashboard-review",
+      "line": 0.42857142857142855,
+      "char": 0.49538461538461537
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-data-analysis",
+      "line": 0.42857142857142855,
+      "char": 0.5
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-delivery-acceptance",
+      "line": 0.42857142857142855,
+      "char": 0.5245398773006135
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-document-deck",
+      "line": 0.42857142857142855,
+      "char": 0.5705128205128205
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-evolution-review",
+      "line": 0.42857142857142855,
+      "char": 0.5240963855421686
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-file-operations",
+      "line": 0.42857142857142855,
+      "char": 0.5750798722044729
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-frontend-visual",
+      "line": 0.42857142857142855,
+      "char": 0.5844155844155844
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-go-engineer",
+      "line": 0.42857142857142855,
+      "char": 0.5894039735099338
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-image-creation",
+      "line": 0.42857142857142855,
+      "char": 0.541033434650456
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-incident-diagnosis",
+      "line": 0.42857142857142855,
+      "char": 0.5534591194968553
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-knowledge-base-qa",
+      "line": 0.42857142857142855,
+      "char": 0.4954128440366973
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-learning-coach",
+      "line": 0.42857142857142855,
+      "char": 0.5471698113207547
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-media-quality-review",
+      "line": 0.42857142857142855,
+      "char": 0.550314465408805
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-multi-platform-distribution",
+      "line": 0.42857142857142855,
+      "char": 0.5193548387096775
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-post-production",
+      "line": 0.42857142857142855,
+      "char": 0.4809384164222874
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-publication-delivery",
+      "line": 0.42857142857142855,
+      "char": 0.5075528700906344
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-python-engineer",
+      "line": 0.42857142857142855,
+      "char": 0.5537974683544303
+    },
+    {
+      "a": "wuji-expert-ai-workflow-engineer",
+      "b": "wuji-expert-requirement-decomposition",
+      "line": 0.42857142857142855,
+      "char": 0.5046439628482973
+    }
+  ]
+}

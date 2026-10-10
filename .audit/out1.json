@@ -1,0 +1,311 @@
+{
+  "expertCount": 57,
+  "leaderCount": 16,
+  "total": 73,
+  "expertSizeMin": 5540,
+  "expertSizeMax": 6464,
+  "leaderSizeMin": 3829,
+  "leaderSizeMax": 5918,
+  "expertSizes": {
+    "wuji-expert-ai-workflow-engineer": 5700,
+    "wuji-expert-art-director": 6222,
+    "wuji-expert-automation-design": 5597,
+    "wuji-expert-business-library": 5916,
+    "wuji-expert-client-proposal": 5652,
+    "wuji-expert-code-implementation": 5670,
+    "wuji-expert-code-repair": 5615,
+    "wuji-expert-code-review": 6211,
+    "wuji-expert-comfyui-cpp-kernel": 5621,
+    "wuji-expert-comfyui-debug-performance": 5827,
+    "wuji-expert-comfyui-distillation": 5671,
+    "wuji-expert-comfyui-go-integration": 5631,
+    "wuji-expert-comfyui-packaging": 5708,
+    "wuji-expert-comfyui-python-node": 5679,
+    "wuji-expert-comfyui-reverse": 5648,
+    "wuji-expert-comfyui-rust-extension": 5691,
+    "wuji-expert-comfyui-test-verification": 5732,
+    "wuji-expert-comfyui-workflow": 5697,
+    "wuji-expert-comic-storyboard": 5630,
+    "wuji-expert-content-operations": 5697,
+    "wuji-expert-contract-risk": 5724,
+    "wuji-expert-course-design": 5660,
+    "wuji-expert-cpp-engineer": 5597,
+    "wuji-expert-dashboard-review": 5824,
+    "wuji-expert-data-analysis": 5936,
+    "wuji-expert-delivery-acceptance": 6464,
+    "wuji-expert-document-deck": 5661,
+    "wuji-expert-evolution-review": 5815,
+    "wuji-expert-file-operations": 6109,
+    "wuji-expert-frontend-visual": 5707,
+    "wuji-expert-go-engineer": 5560,
+    "wuji-expert-image-creation": 5709,
+    "wuji-expert-incident-diagnosis": 5628,
+    "wuji-expert-knowledge-base-qa": 6007,
+    "wuji-expert-learning-coach": 5540,
+    "wuji-expert-media-quality-review": 6163,
+    "wuji-expert-multi-platform-distribution": 6071,
+    "wuji-expert-post-production": 5706,
+    "wuji-expert-publication-delivery": 5644,
+    "wuji-expert-python-engineer": 5658,
+    "wuji-expert-requirement-decomposition": 6320,
+    "wuji-expert-research": 5640,
+    "wuji-expert-rust-engineer": 5629,
+    "wuji-expert-screenwriter": 6052,
+    "wuji-expert-skill-packager": 5967,
+    "wuji-expert-software-architecture": 5768,
+    "wuji-expert-software-reverse": 5696,
+    "wuji-expert-studio-owner": 5683,
+    "wuji-expert-studio-producer": 5787,
+    "wuji-expert-template-curator": 5681,
+    "wuji-expert-topic-selection": 5589,
+    "wuji-expert-video-copywriter": 5646,
+    "wuji-expert-video-production": 5707,
+    "wuji-expert-visual-storyboard": 5919,
+    "wuji-expert-voice-audio": 5722,
+    "wuji-expert-workbench-builder": 5549,
+    "wuji-expert-writing": 5876
+  },
+  "leaderSizes": {
+    "wuji-leader-audio": 3829,
+    "wuji-leader-automation": 3852,
+    "wuji-leader-bugfix": 4131,
+    "wuji-leader-business": 4388,
+    "wuji-leader-comfyui": 4928,
+    "wuji-leader-data": 3938,
+    "wuji-leader-governance": 4567,
+    "wuji-leader-image": 3839,
+    "wuji-leader-learning": 4140,
+    "wuji-leader-office": 3971,
+    "wuji-leader-publish": 4696,
+    "wuji-leader-research": 3857,
+    "wuji-leader-software": 4674,
+    "wuji-leader-video": 5918,
+    "wuji-leader-web": 4699,
+    "wuji-leader-writing": 4334
+  },
+  "expertSignatureGroups": {
+    "# 专家：ai-workflow-engineer | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-ai-workflow-engineer"
+    ],
+    "# 专家：art-director | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-art-director"
+    ],
+    "# 专家：automation-design | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-automation-design"
+    ],
+    "# 专家：business-library | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-business-library"
+    ],
+    "# 专家：client-proposal | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-client-proposal"
+    ],
+    "# 专家：code-implementation | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-code-implementation"
+    ],
+    "# 专家：code-repair | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-code-repair"
+    ],
+    "# 专家：code-review | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-code-review"
+    ],
+    "# 专家：comfyui-cpp-kernel | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-cpp-kernel"
+    ],
+    "# 专家：comfyui-debug-performance | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-debug-performance"
+    ],
+    "# 专家：comfyui-distillation | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-distillation"
+    ],
+    "# 专家：comfyui-go-integration | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-go-integration"
+    ],
+    "# 专家：comfyui-packaging | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-packaging"
+    ],
+    "# 专家：comfyui-python-node | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-python-node"
+    ],
+    "# 专家：comfyui-reverse | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-reverse"
+    ],
+    "# 专家：comfyui-rust-extension | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-rust-extension"
+    ],
+    "# 专家：comfyui-test-verification | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-test-verification"
+    ],
+    "# 专家：comfyui-workflow | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comfyui-workflow"
+    ],
+    "# 专家：comic-storyboard | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-comic-storyboard"
+    ],
+    "# 专家：content-operations | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-content-operations"
+    ],
+    "# 专家：contract-risk | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-contract-risk"
+    ],
+    "# 专家：course-design | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-course-design"
+    ],
+    "# 专家：cpp-engineer | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-cpp-engineer"
+    ],
+    "# 专家：dashboard-review | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-dashboard-review"
+    ],
+    "# 专家：data-analysis | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-data-analysis"
+    ],
+    "# 专家：delivery-acceptance | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-delivery-acceptance"
+    ],
+    "# 专家：document-deck | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-document-deck"
+    ],
+    "# 专家：evolution-review | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-evolution-review"
+    ],
+    "# 专家：file-operations | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-file-operations"
+    ],
+    "# 专家：frontend-visual | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-frontend-visual"
+    ],
+    "# 专家：go-engineer | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-go-engineer"
+    ],
+    "# 专家：image-creation | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-image-creation"
+    ],
+    "# 专家：incident-diagnosis | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-incident-diagnosis"
+    ],
+    "# 专家：knowledge-base-qa | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-knowledge-base-qa"
+    ],
+    "# 专家：learning-coach | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-learning-coach"
+    ],
+    "# 专家：media-quality-review | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-media-quality-review"
+    ],
+    "# 专家：multi-platform-distribution | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-multi-platform-distribution"
+    ],
+    "# 专家：post-production | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-post-production"
+    ],
+    "# 专家：publication-delivery | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-publication-delivery"
+    ],
+    "# 专家：python-engineer | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-python-engineer"
+    ],
+    "# 专家：requirement-decomposition | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-requirement-decomposition"
+    ],
+    "# 专家：research | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-research"
+    ],
+    "# 专家：rust-engineer | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-rust-engineer"
+    ],
+    "# 专家：screenwriter | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-screenwriter"
+    ],
+    "# 专家：skill-packager | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-skill-packager"
+    ],
+    "# 专家：software-architecture | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-software-architecture"
+    ],
+    "# 专家：software-reverse | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-software-reverse"
+    ],
+    "# 专家：studio-owner | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-studio-owner"
+    ],
+    "# 专家：studio-producer | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-studio-producer"
+    ],
+    "# 专家：template-curator | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-template-curator"
+    ],
+    "# 专家：topic-selection | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-topic-selection"
+    ],
+    "# 专家：video-copywriter | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-video-copywriter"
+    ],
+    "# 专家：video-production | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-video-production"
+    ],
+    "# 专家：visual-storyboard | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-visual-storyboard"
+    ],
+    "# 专家：voice-audio | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-voice-audio"
+    ],
+    "# 专家：workbench-builder | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-workbench-builder"
+    ],
+    "# 专家：writing | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 在团队中的职责 | ## 工作流程 | ## 约束 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 归属 | ## 诚实标注": [
+      "wuji-expert-writing"
+    ]
+  },
+  "expertSignatureCount": 57,
+  "leaderSignatureGroups": {
+    "# 主帅：audio | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-audio"
+    ],
+    "# 主帅：automation | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-automation"
+    ],
+    "# 主帅：bugfix | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-bugfix"
+    ],
+    "# 主帅：business | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-business"
+    ],
+    "# 主帅：comfyui | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-comfyui"
+    ],
+    "# 主帅：data | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-data"
+    ],
+    "# 主帅：governance | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-governance"
+    ],
+    "# 主帅：image | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-image"
+    ],
+    "# 主帅：learning | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-learning"
+    ],
+    "# 主帅：office | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-office"
+    ],
+    "# 主帅：publish | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-publish"
+    ],
+    "# 主帅：research | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-research"
+    ],
+    "# 主帅：software | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-software"
+    ],
+    "# 主帅：video | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-video"
+    ],
+    "# 主帅：web | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-web"
+    ],
+    "# 主帅：writing | ## 我负责 / 我不负责 | ## 输入契约（缺一即 BLOCKED） | ## 工作流程 | ## 约束 | ## 本族配方 | ## 输出 | ## 所用 Skill | ## 交付前自检清单（逐项打勾，不过不交） | ## 诚实标注": [
+      "wuji-leader-writing"
+    ]
+  },
+  "leaderSignatureCount": 16
+}
