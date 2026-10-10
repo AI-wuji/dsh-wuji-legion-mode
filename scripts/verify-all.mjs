@@ -9,10 +9,14 @@ const repo = join(here, '..');
 const steps = [
   ['生成 bundle patch', ['build-wuji-preset.mjs']],
   ['生成物同步校验', ['build-wuji-preset.mjs', '--check']],
-  // 73 个角色文件从 4.0 源数据生成；--check 保证生成物与源数据一致（不手改）
-  ['生成角色文件（16 主帅 / 57 专家）', ['build-wuji-roles.mjs']],
+  // 角色文件从 4.0 源数据生成；--check 保证生成物与源数据一致（不手改）
+  // 注意：源数据（p3）之外还有 FOREIGN 白名单保护的专家，故产物总数多于源数据条数。
+  ['生成角色文件（16 主帅 / 52 专家 + 白名单专家）', ['build-wuji-roles.mjs']],
   ['角色文件与源数据一致', ['build-wuji-roles.mjs', '--check']],
   ['角色格式 / 归属 / 可发现性', ['verify-wuji-roles.mjs']],
+  // recipes.json 是参谋部真正读的表，此前是手写派生产物、改 manifest 后不同步，
+  // 曾导致参谋部继续返回已退役成员。这里强制它与 manifest 一致。
+  ['参谋部配方表与 manifest 同步', ['build-staff-recipes.mjs', '--check']],
   ['preset 结构与包存在性', ['check-wuji-preset.mjs']],
   ['config schema 与包契约一致', ['verify-preset-config.mjs']],
   ['参谋部调度核心单测', [join(repo, 'packages/wuji-staff/staff-core.test.js')]],

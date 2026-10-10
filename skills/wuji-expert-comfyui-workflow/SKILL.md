@@ -33,7 +33,8 @@ source_id: p3/leaf/comfyui-workflow
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：UI/API/图数据一致、连线和执行依赖（按需成员），触发意图：comfyui_workflow
+- 配方 `comfyui-delivery`：搭建与解析工作流，保证 UI/API/图数据与执行依赖一致（必需成员）
+- 配方 `comfyui-plugin-delivery`：搭建/解析测试工作流，保证图数据与执行依赖一致（必需成员）
 
 ## 工作流程
 

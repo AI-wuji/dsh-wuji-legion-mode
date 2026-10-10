@@ -1,6 +1,6 @@
 ---
 name: wuji-expert-comfyui-distillation
-description: 无极军团 4.0 专家「comfyui-distillation」（leaf）：行为重叠/单一新实现/专业差异。当子任务需要 行为重叠/单一新实现/专业差异，且属于 comfyui 时加载。
+description: 无极军团 4.0 专家「comfyui-distillation」（leaf）：行为重叠/单一新实现/专业差异。当子任务需要 行为重叠/单一新实现/专业差异，且属于 comfyui、comfyui_plugin_dev 时加载。
 kind: expert
 role_kind: leaf
 family: comfyui
@@ -33,7 +33,8 @@ source_id: p3/leaf/comfyui-distillation
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：行为重叠/单一新实现/专业差异（按需成员），触发意图：comfyui_fusion、comfyui_distillation
+- 配方 `comfyui-delivery`：复刻融合时比较两套行为，保证单一新实现且保留专业差异（必需成员）
+- 配方 `comfyui-plugin-delivery`：需要复刻或融合既有节点时保证单一新实现并保留专业差异（必需成员）
 
 ## 工作流程
 

@@ -1,6 +1,6 @@
 ---
 name: wuji-expert-comfyui-python-node
-description: 无极军团 4.0 专家「comfyui-python-node」（leaf）：真实注册/输入输出/错误/数值/取消。当子任务需要 真实注册/输入输出/错误/数值/取消，且属于 comfyui 时加载。
+description: 无极军团 4.0 专家「comfyui-python-node」（leaf）：真实注册/输入输出/错误/数值/取消。当子任务需要 真实注册/输入输出/错误/数值/取消，且属于 comfyui、comfyui_plugin_dev 时加载。
 kind: expert
 role_kind: leaf
 family: comfyui
@@ -33,7 +33,8 @@ source_id: p3/leaf/comfyui-python-node
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：真实注册/输入输出/错误/数值/取消（按需成员）
+- 配方 `comfyui-delivery`：实现节点后端：真实注册、输入输出、错误、数值、取消（必需成员）
+- 配方 `comfyui-plugin-delivery`：实现节点业务逻辑：真实注册、输入输出、错误、数值、取消（必需成员）
 
 ## 工作流程
 

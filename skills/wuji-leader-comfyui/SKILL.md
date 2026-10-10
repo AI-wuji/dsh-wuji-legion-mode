@@ -1,11 +1,11 @@
 ---
 name: wuji-leader-comfyui
-description: 无极军团 4.0 主帅「comfyui」专家团：承接 comfyui 领域的子任务。当任务涉及 comfyui 时加载本文件。它组织本族专家完成交付并汇总回交，不代写成员制品。
+description: 无极军团 4.0 主帅「comfyui」专家团：承接 comfyui/comfyui_plugin_dev/comfyui_plugin_research 领域的子任务。当任务涉及 comfyui、comfyui_plugin_dev、comfyui_plugin_research 时加载本文件。它组织本族专家完成交付并汇总回交，不代写成员制品。
 kind: leader
 family: comfyui
 source_family_id: lead.comfyui
 leader_id: lead.comfyui
-recipes: [comfyui-delivery]
+recipes: [comfyui-delivery, comfyui-plugin-research, comfyui-plugin-delivery]
 ---
 # 主帅：comfyui
 
@@ -45,20 +45,45 @@ recipes: [comfyui-delivery]
 ## 本族配方
 
 - **`comfyui-delivery`**（comfyui）
-  - 承接：组织ComfyUI行为分析、逆推、融合、节点实现、工作流与验收
+  - 承接：组织 ComfyUI 插件的检索、对标、规范、实现、双平台部署与验收
   - 成员：
-    - `wuji-expert-ai-workflow-engineer`（必需） — 生态/API/取消/权利/真实动作分专项
-    - `wuji-expert-comfyui-reverse`（触发意图：comfyui_analysis、comfyui_reverse_engineering） — 注册入口/张量类型/错误/数据流
-    - `wuji-expert-comfyui-workflow`（触发意图：comfyui_workflow） — UI/API/图数据一致、连线和执行依赖
-    - `wuji-expert-comfyui-python-node` — 真实注册/输入输出/错误/数值/取消
-    - `wuji-expert-comfyui-rust-extension` — 只改已证热点、所有权/异常/线程界
-    - `wuji-expert-comfyui-go-integration` — 外部服务边界、幂等/查询/取消
-    - `wuji-expert-comfyui-cpp-kernel` — 最小算子/CPU设备回退/数值容差
-    - `wuji-expert-comfyui-packaging`（触发意图：comfyui_packaging） — 精确依赖/许可/干净环境/目标注册
-    - `wuji-expert-comfyui-debug-performance`（触发意图：comfyui_debug、comfyui_performance） — 已有根因先查，决定性缺口复现与单位范围
-    - `wuji-expert-comfyui-test-verification`（触发意图：comfyui_verification） — 真实节点/真实图/异常/数值/资源
-    - `wuji-expert-comfyui-distillation`（触发意图：comfyui_fusion、comfyui_distillation） — 行为重叠/单一新实现/专业差异
-  - 验收默认：authorized-inputs、actual-registry-or-known-gap、workflow-and-runtime-evidence
+    - `wuji-expert-ai-workflow-engineer`（必需） — 生态/API/取消/权利边界，外部集成的真实动作分专项
+    - `wuji-expert-comfyui-reverse`（必需） — 解析既有节点/插件的注册入口、张量类型、错误与数据流
+    - `wuji-expert-comfyui-workflow`（必需） — 搭建与解析工作流，保证 UI/API/图数据与执行依赖一致
+    - `wuji-expert-comfyui-python-node`（必需） — 实现节点后端：真实注册、输入输出、错误、数值、取消
+    - `wuji-expert-comfyui-native-extension`（必需） — 仅在有实测性能缺口时引入原生扩展，必留 Python 回退
+    - `wuji-expert-comfyui-spec-ecosystem`（必需） — 提供 ComfyUI 规范、官方节点与整合包事实底座
+    - `wuji-expert-comfyui-frontend-backend`（必需） — 前后端实现、v2/v3 双兼容、中文界面 i18n
+    - `wuji-expert-comfyui-deployment`（必需） — Windows 本地与 Linux 服务器双平台部署并跑通
+    - `wuji-expert-comfyui-verification-diagnosis`（必需） — 真实用例验证与根因诊断，出证据不改代码
+    - `wuji-expert-comfyui-distillation`（必需） — 复刻融合时比较两套行为，保证单一新实现且保留专业差异
+    - `wuji-expert-comfyui-packaging`（必需） — 精确依赖、许可证、干净环境与目标注册
+  - 验收默认：authorized-inputs、actual-registry-or-known-gap、workflow-and-runtime-evidence、dual-platform-evidence、schema-compat-evidence
+- **`comfyui-plugin-research`**（comfyui、comfyui_plugin_research）
+  - 承接：组织同类插件的检索与对标分析，产出可决策的取长补短结论
+  - 成员：
+    - `wuji-expert-comfyui-ecosystem-search`（必需） — 全网检索同类插件，产出原始情报档案（硬事实，不做结论）
+    - `wuji-expert-comfyui-solution-benchmark`（必需） — 基于档案产出优缺点对照矩阵与取长补短建议
+    - `wuji-expert-comfyui-spec-ecosystem`（触发意图：comfyui_benchmark） — 提供官方节点与生态事实，避免对标结论与官方实现冲突
+    - `wuji-expert-objective-critic`（触发意图：comfyui_benchmark） — 站在生产链外评审对标结论，主动找出遗漏的缺点与迎合性好评（克隆实例）
+  - 验收默认：searchable-provenance、evidence-graded-claims、no-unanimous-praise
+- **`comfyui-plugin-delivery`**（comfyui、comfyui_plugin_dev）
+  - 承接：组织 ComfyUI 插件从规范确认到双平台双版本交付的全流程
+  - 成员：
+    - `wuji-expert-comfyui-spec-ecosystem`（必需） — 锁定目标 ComfyUI 版本下的规范、官方节点与整合包事实
+    - `wuji-expert-comfyui-frontend-backend`（必需） — 实现后端节点与前端扩展，落实 v2/v3 双兼容与中文界面
+    - `wuji-expert-comfyui-python-node`（必需） — 实现节点业务逻辑：真实注册、输入输出、错误、数值、取消
+    - `wuji-expert-comfyui-deployment`（必需） — Windows 与 Linux 双平台部署并各自跑通，出双平台证据
+    - `wuji-expert-comfyui-verification-diagnosis`（必需） — 真实用例验证与根因诊断，出证据不改代码
+    - `wuji-expert-comfyui-workflow`（必需） — 搭建/解析测试工作流，保证图数据与执行依赖一致
+    - `wuji-expert-comfyui-reverse`（必需） — 需要解析既有插件实现时提供行为规格
+    - `wuji-expert-comfyui-distillation`（必需） — 需要复刻或融合既有节点时保证单一新实现并保留专业差异
+    - `wuji-expert-comfyui-native-extension`（必需） — 仅在有实测性能缺口时引入原生扩展，必留 Python 回退
+    - `wuji-expert-comfyui-packaging`（必需） — 需要发布时处理依赖、许可证、干净环境与目标注册
+    - `wuji-expert-ai-workflow-engineer`（必需） — 涉及外部服务集成时明确生态/API/取消/权利边界
+    - `wuji-expert-objective-critic`（必需） — 交付前独立第三方评审，主动找出遗漏与自我迎合（克隆实例）
+    - `wuji-expert-scoring-expert`（必需） — 需要量化验收档位时按技术维度打分（按需，克隆实例）
+  - 验收默认：authorized-inputs、dual-platform-evidence、schema-compat-evidence、i18n-without-behavior-change、actual-runtime-evidence
 
 ## 输出
 

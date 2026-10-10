@@ -1,6 +1,5 @@
 {
   "source": "wuji-legion-codex-4.0/catalog/p3/delegation-manifest.json",
-  "generated_by": "scripts/build-staff-recipes.mjs",
   "leader_families": [
     "comfyui",
     "software",
@@ -17,8 +16,7 @@
     "learning",
     "automation",
     "publish",
-    "governance",
-    "meta-instruction"
+    "governance"
   ],
   "recipes": [
     {
@@ -35,10 +33,6 @@
         "instruction_revision"
       ],
       "members": [
-        "requirement-decomposition",
-        "evolution-review"
-      ],
-      "required_members": [
         "requirement-decomposition",
         "evolution-review"
       ],
@@ -64,9 +58,6 @@
       "members": [
         "research",
         "knowledge-base-qa"
-      ],
-      "required_members": [
-        "research"
       ],
       "acceptance": [
         "primary-sources-or-known-gap",
@@ -97,9 +88,6 @@
         "cpp-engineer",
         "code-review"
       ],
-      "required_members": [
-        "code-review"
-      ],
       "acceptance": [
         "scope-locked",
         "write-set-unique",
@@ -126,9 +114,6 @@
         "code-review",
         "delivery-acceptance"
       ],
-      "required_members": [
-        "code-repair"
-      ],
       "acceptance": [
         "reproduction-or-known-gap",
         "root-cause-recorded",
@@ -145,31 +130,28 @@
       "typed_intents": [
         "comfyui_analysis",
         "comfyui_workflow",
+        "comfyui_node",
         "comfyui_fusion",
-        "comfyui_packaging"
+        "comfyui_packaging",
+        "comfyui_verification"
       ],
       "members": [
         "ai-workflow-engineer",
         "comfyui-reverse",
         "comfyui-workflow",
         "comfyui-python-node",
-        "comfyui-native-extension",
-        "comfyui-spec-ecosystem",
-        "comfyui-frontend-backend",
-        "comfyui-deployment",
-        "comfyui-verification-diagnosis",
-        "comfyui-distillation",
-        "comfyui-packaging"
-      ],
-      "required_members": [
-        "ai-workflow-engineer"
+        "comfyui-rust-extension",
+        "comfyui-go-integration",
+        "comfyui-cpp-kernel",
+        "comfyui-packaging",
+        "comfyui-debug-performance",
+        "comfyui-test-verification",
+        "comfyui-distillation"
       ],
       "acceptance": [
         "authorized-inputs",
         "actual-registry-or-known-gap",
-        "workflow-and-runtime-evidence",
-        "dual-platform-evidence",
-        "schema-compat-evidence"
+        "workflow-and-runtime-evidence"
       ]
     },
     {
@@ -192,9 +174,6 @@
         "document-deck",
         "data-analysis",
         "delivery-acceptance"
-      ],
-      "required_members": [
-        "document-deck"
       ],
       "acceptance": [
         "editable-source-preserved",
@@ -227,9 +206,6 @@
         "topic-selection",
         "comic-storyboard"
       ],
-      "required_members": [
-        "writing"
-      ],
       "acceptance": [
         "brief-and-audience-locked",
         "facts-or-setting-scoped",
@@ -256,9 +232,6 @@
         "code-review",
         "file-operations"
       ],
-      "required_members": [
-        "frontend-visual"
-      ],
       "acceptance": [
         "behavior-scope-locked",
         "actual-page-check",
@@ -284,9 +257,6 @@
         "dashboard-review",
         "file-operations"
       ],
-      "required_members": [
-        "workbench-builder"
-      ],
       "acceptance": [
         "functional-path-checked",
         "data-contract-stated",
@@ -310,9 +280,6 @@
       "members": [
         "image-creation",
         "art-director"
-      ],
-      "required_members": [
-        "image-creation"
       ],
       "acceptance": [
         "visual-brief-locked",
@@ -341,9 +308,6 @@
         "art-director",
         "media-quality-review"
       ],
-      "required_members": [
-        "video-production"
-      ],
       "acceptance": [
         "story-and-shot-scope",
         "rights-and-source-lock",
@@ -370,9 +334,6 @@
         "visual-storyboard",
         "art-director"
       ],
-      "required_members": [
-        "studio-producer"
-      ],
       "acceptance": [
         "series-bible-or-brief",
         "creative-scope-locked",
@@ -398,9 +359,6 @@
         "media-quality-review",
         "visual-storyboard"
       ],
-      "required_members": [
-        "post-production"
-      ],
       "acceptance": [
         "source-assets-locked",
         "timeline-and-export-scope",
@@ -425,9 +383,6 @@
       "members": [
         "voice-audio",
         "media-quality-review"
-      ],
-      "required_members": [
-        "voice-audio"
       ],
       "acceptance": [
         "track-and-time-scope",
@@ -458,9 +413,6 @@
         "contract-risk",
         "delivery-acceptance"
       ],
-      "required_members": [
-        "business-library"
-      ],
       "acceptance": [
         "scope-and-assumptions",
         "commercial-risk-stated",
@@ -488,9 +440,6 @@
         "template-curator",
         "requirement-decomposition"
       ],
-      "required_members": [
-        "learning-coach"
-      ],
       "acceptance": [
         "learner-outcome-measurable",
         "materials-and-exercises-linked",
@@ -513,9 +462,6 @@
       "members": [
         "automation-design",
         "file-operations"
-      ],
-      "required_members": [
-        "automation-design"
       ],
       "acceptance": [
         "authorization-scoped",
@@ -541,9 +487,6 @@
         "multi-platform-distribution",
         "delivery-acceptance"
       ],
-      "required_members": [
-        "content-operations"
-      ],
       "acceptance": [
         "final-materials-locked",
         "platform-scope-stated",
@@ -568,9 +511,6 @@
         "publication-delivery",
         "skill-packager",
         "delivery-acceptance"
-      ],
-      "required_members": [
-        "publication-delivery"
       ],
       "acceptance": [
         "authorization-explicit",
@@ -598,9 +538,6 @@
         "data-analysis",
         "business-library"
       ],
-      "required_members": [
-        "dashboard-review"
-      ],
       "acceptance": [
         "data-scope-and-metric-lock",
         "calculation-traceable",
@@ -627,181 +564,10 @@
         "skill-packager",
         "knowledge-base-qa"
       ],
-      "required_members": [
-        "evolution-review"
-      ],
       "acceptance": [
         "source-and-scope-bound",
         "regression-and-reversal",
         "release-state-honest"
-      ]
-    },
-    {
-      "id": "meta-instruction-design",
-      "leader": "leader/meta-instruction",
-      "family": "meta-instruction",
-      "domains": [
-        "meta_instruction",
-        "prompt_meta"
-      ],
-      "typed_intents": [
-        "meta_instruction_design",
-        "prompt_system_design",
-        "prompt_meta"
-      ],
-      "members": [
-        "precedent-researcher",
-        "narrative-architect",
-        "image-prompt-architect",
-        "objective-critic",
-        "scoring-expert",
-        "skill-evolution"
-      ],
-      "required_members": [
-        "precedent-researcher",
-        "narrative-architect",
-        "image-prompt-architect",
-        "objective-critic",
-        "scoring-expert"
-      ],
-      "acceptance": [
-        "target-model-declared",
-        "five-elements-complete",
-        "evidence-graded",
-        "pure-artifact"
-      ]
-    },
-    {
-      "id": "meta-instruction-governance",
-      "leader": "leader/meta-instruction",
-      "family": "meta-instruction",
-      "domains": [
-        "meta_instruction",
-        "governance",
-        "evolution"
-      ],
-      "typed_intents": [
-        "skill_packaging",
-        "asset_governance",
-        "evolution_review"
-      ],
-      "members": [
-        "skill-evolution",
-        "scoring-expert"
-      ],
-      "required_members": [
-        "skill-evolution"
-      ],
-      "acceptance": [
-        "provenance-recorded",
-        "regression-checked",
-        "distribution-consistent"
-      ]
-    },
-    {
-      "id": "meta-instruction-model-rewrite",
-      "leader": "leader/meta-instruction",
-      "family": "meta-instruction",
-      "domains": [
-        "meta_instruction",
-        "prompt_meta"
-      ],
-      "typed_intents": [
-        "meta_instruction_revision",
-        "model_syntax_migration",
-        "format_attribution"
-      ],
-      "members": [
-        "image-prompt-architect",
-        "objective-critic",
-        "scoring-expert"
-      ],
-      "required_members": [
-        "image-prompt-architect",
-        "objective-critic",
-        "scoring-expert"
-      ],
-      "acceptance": [
-        "original-format-classified",
-        "rejected-formats-recorded",
-        "no-silent-regression"
-      ]
-    },
-    {
-      "id": "comfyui-plugin-research",
-      "leader": "lead.comfyui",
-      "family": "comfyui",
-      "domains": [
-        "comfyui",
-        "comfyui_plugin_research"
-      ],
-      "typed_intents": [
-        "comfyui_ecosystem_search",
-        "comfyui_benchmark",
-        "plugin_research"
-      ],
-      "members": [
-        "comfyui-ecosystem-search",
-        "comfyui-solution-benchmark",
-        "comfyui-spec-ecosystem",
-        "objective-critic"
-      ],
-      "required_members": [
-        "comfyui-ecosystem-search",
-        "comfyui-solution-benchmark"
-      ],
-      "acceptance": [
-        "searchable-provenance",
-        "evidence-graded-claims",
-        "no-unanimous-praise"
-      ]
-    },
-    {
-      "id": "comfyui-plugin-delivery",
-      "leader": "lead.comfyui",
-      "family": "comfyui",
-      "domains": [
-        "comfyui",
-        "comfyui_plugin_dev"
-      ],
-      "typed_intents": [
-        "comfyui_plugin_dev",
-        "comfyui_frontend",
-        "comfyui_i18n",
-        "comfyui_compat",
-        "comfyui_deployment",
-        "comfyui_node",
-        "comfyui_verification"
-      ],
-      "members": [
-        "comfyui-spec-ecosystem",
-        "comfyui-frontend-backend",
-        "comfyui-python-node",
-        "comfyui-deployment",
-        "comfyui-verification-diagnosis",
-        "comfyui-workflow",
-        "comfyui-reverse",
-        "comfyui-distillation",
-        "comfyui-native-extension",
-        "comfyui-packaging",
-        "ai-workflow-engineer",
-        "objective-critic",
-        "scoring-expert"
-      ],
-      "required_members": [
-        "comfyui-spec-ecosystem",
-        "comfyui-frontend-backend",
-        "comfyui-python-node",
-        "comfyui-deployment",
-        "comfyui-verification-diagnosis",
-        "objective-critic"
-      ],
-      "acceptance": [
-        "authorized-inputs",
-        "dual-platform-evidence",
-        "schema-compat-evidence",
-        "i18n-without-behavior-change",
-        "actual-runtime-evidence"
       ]
     }
   ]

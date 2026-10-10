@@ -62,13 +62,33 @@ function readSource() {
 //   ② 一致性检查必须跳过，否则会误报 ORPHAN。
 // 它们的真源是 `skills/` 里的手写/半手工文件 + `delegation-manifest.json` 的配方登记。
 const FOREIGN = new Set([
+  // meta-instruction 族（WorkBuddy prompt-meta-team 复刻）
   'wuji-expert-narrative-architect',
   'wuji-expert-image-prompt-architect',
   'wuji-expert-precedent-researcher',
   'wuji-expert-objective-critic',
   'wuji-expert-scoring-expert',
   'wuji-expert-skill-evolution',
+  // comfyui 插件研发族（按用户需求新建/合并）
+  'wuji-expert-comfyui-ecosystem-search',
+  'wuji-expert-comfyui-solution-benchmark',
+  'wuji-expert-comfyui-spec-ecosystem',
+  'wuji-expert-comfyui-deployment',
+  'wuji-expert-comfyui-frontend-backend',
+  'wuji-expert-comfyui-native-extension',
+  'wuji-expert-comfyui-verification-diagnosis',
 ]);
+
+// ── 已被合并、必须从源数据与产物中移除的旧角色 ──────────────────────────
+// 若仍留在 experts.json / 配方里，生成器会把它们重新造出来。
+const RETIRED = new Set([
+  'comfyui-rust-extension',
+  'comfyui-go-integration',
+  'comfyui-cpp-kernel',
+  'comfyui-debug-performance',
+  'comfyui-test-verification',
+]);
+
 
 // ── 建立索引 ────────────────────────────────────────────────────────────────
 function buildIndex({ experts, delegation }) {

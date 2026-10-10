@@ -1,6 +1,6 @@
 ---
 name: wuji-expert-ai-workflow-engineer
-description: 无极军团 4.0 专家「ai-workflow-engineer」（workflow）：生态/API/取消/权利/真实动作分专项。当子任务需要 生态/API/取消/权利/真实动作分专项，且属于 comfyui 时加载。
+description: 无极军团 4.0 专家「ai-workflow-engineer」（workflow）：生态/API/取消/权利/真实动作分专项。当子任务需要 生态/API/取消/权利/真实动作分专项，且属于 comfyui、comfyui_plugin_dev 时加载。
 kind: expert
 role_kind: workflow
 family: comfyui
@@ -33,7 +33,8 @@ source_id: p3/workflow/ai-workflow-engineer
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：生态/API/取消/权利/真实动作分专项（必需成员）
+- 配方 `comfyui-delivery`：生态/API/取消/权利边界，外部集成的真实动作分专项（必需成员）
+- 配方 `comfyui-plugin-delivery`：涉及外部服务集成时明确生态/API/取消/权利边界（必需成员）
 
 ## 工作流程
 

@@ -1,6 +1,6 @@
 ---
 name: wuji-expert-comfyui-reverse
-description: 无极军团 4.0 专家「comfyui-reverse」（leaf）：注册入口/张量类型/错误/数据流。当子任务需要 注册入口/张量类型/错误/数据流，且属于 comfyui 时加载。
+description: 无极军团 4.0 专家「comfyui-reverse」（leaf）：注册入口/张量类型/错误/数据流。当子任务需要 注册入口/张量类型/错误/数据流，且属于 comfyui、comfyui_plugin_dev 时加载。
 kind: expert
 role_kind: leaf
 family: comfyui
@@ -33,7 +33,8 @@ source_id: p3/leaf/comfyui-reverse
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：注册入口/张量类型/错误/数据流（按需成员），触发意图：comfyui_analysis、comfyui_reverse_engineering
+- 配方 `comfyui-delivery`：解析既有节点/插件的注册入口、张量类型、错误与数据流（必需成员）
+- 配方 `comfyui-plugin-delivery`：需要解析既有插件实现时提供行为规格（必需成员）
 
 ## 工作流程
 

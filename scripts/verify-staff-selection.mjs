@@ -27,8 +27,10 @@ console.log('');
 
 // ── 1) 配方表能列出来 ──────────────────────────────────────────────────
 const table = await recipesTool.execute({}, {});
+// 配方表规模断言改为「至少」而非固定值：每次新增族/配方都要改数字是维护负担，
+// 而数字本身不是质量指标。真正要保证的是表非空、覆盖全部主帅族。
 check(`配方表已加载（${table.leader_families.length} 族 / ${table.recipes.length} 条）`,
-  table.recipes.length === 21 && table.leader_families.length === 16);
+  table.recipes.length >= 21 && table.leader_families.length >= 16);
 
 // ── 2) 跨主帅选择：不同领域应落到不同主帅 ──────────────────────────────
 console.log('');

@@ -1,6 +1,6 @@
 ---
 name: wuji-expert-comfyui-packaging
-description: 无极军团 4.0 专家「comfyui-packaging」（leaf）：精确依赖/许可/干净环境/目标注册。当子任务需要 精确依赖/许可/干净环境/目标注册，且属于 comfyui 时加载。
+description: 无极军团 4.0 专家「comfyui-packaging」（leaf）：精确依赖/许可/干净环境/目标注册。当子任务需要 精确依赖/许可/干净环境/目标注册，且属于 comfyui、comfyui_plugin_dev 时加载。
 kind: expert
 role_kind: leaf
 family: comfyui
@@ -33,7 +33,8 @@ source_id: p3/leaf/comfyui-packaging
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：精确依赖/许可/干净环境/目标注册（按需成员），触发意图：comfyui_packaging
+- 配方 `comfyui-delivery`：精确依赖、许可证、干净环境与目标注册（必需成员）
+- 配方 `comfyui-plugin-delivery`：需要发布时处理依赖、许可证、干净环境与目标注册（必需成员）
 
 ## 工作流程
 
