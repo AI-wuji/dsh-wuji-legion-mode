@@ -1,6 +1,6 @@
 {
   "name": "@wuji/dsh-wuji-bundle",
-  "version": "0.4.0",
+  "version": "4.2.0",
   "description": "Wuji Legion 4.0 as a DSH bundle: declares the `wuji` agent preset (Aji persona, iron rules, and the official DSH orchestration plane). Mounts nothing on the Host plane, so non-Wuji presets stay unaffected.",
   "private": true,
   "type": "module",
