@@ -127,21 +127,30 @@ check('每个专家的 family 有效且引用存在的主帅', orphans.length ==
 check(`共享专家被正确标注（${sharedExperts.length} 个）`, sharedExperts.length > 0,
   '上游有 14 个跨族共享专家，一个都没标出来说明 families 字段没生成对');
 
-// 反向：每个主帅都应有可引用成员（以主帅文件里的「可引用成员」章节为准，
-// 因为共享专家可能在别的族文件里主属，但对本族仍然可用）
+// 反向：每个主帅都应有可引用成员。
+// 计数以「本族配方 → 成员」为准，因为共享专家可能在别的族主属，但对本族仍可用。
 console.log('');
 const emptyLeaders = [];
 for (const dir of leaders) {
   const text = readFileSync(join(SKILLS, dir, 'SKILL.md'), 'utf8');
-  const m = /## 可引用成员（(\d+) 个）/.exec(text);
-  if (!m || Number(m[1]) === 0) emptyLeaders.push(dir);
+  const members = text.match(/^    - `wuji-expert-[\w-]+`/gm) ?? [];
+  if (members.length === 0) emptyLeaders.push(dir);
 }
 check('没有空主帅（每个主帅都有可引用成员）', emptyLeaders.length === 0, emptyLeaders.join(', '));
 
 // ── 必填语义字段 ───────────────────────────────────────────────────────
+// 章节名对应 docs/ROLE-FRAMEWORK.md 的框架映射表。
+// 这批章节覆盖「职责 / 边界 / 输入 / 产出 / 权限」，缺任一即职责书不完整。
 console.log('');
 console.log('--- 必填语义字段 ---');
-const REQUIRED_SECTIONS = ['## 五要素', '## 职责边界', '## DSH 运行时'];
+const REQUIRED_SECTIONS = [
+  '## 我负责 / 我不负责',
+  '## 输入契约（缺一即 BLOCKED）',
+  '## 工作流程',
+  '## 输出',
+  '## 交付前自检清单（逐项打勾，不过不交）',
+  '## 诚实标注',
+];
 let missingSections = 0;
 for (const dir of entries) {
   const text = readFileSync(join(SKILLS, dir, 'SKILL.md'), 'utf8');
@@ -152,7 +161,7 @@ for (const dir of entries) {
     }
   }
 }
-check('所有角色含五要素 / 职责边界 / DSH 运行时', missingSections === 0);
+check('所有角色含职责 / 输入 / 流程 / 输出 / 自检 / 诚实标注', missingSections === 0);
 
 // 校验不再出现上游那四个恒为 false 的字段
 const FORBIDDEN = ['runtime_admission', 'cold_reason', 'active_release'];
@@ -169,14 +178,16 @@ for (const dir of entries) {
 check('未搬入上游恒为 false 的运行时字段', forbiddenHits === 0);
 
 // ── 参谋部可用性：family / domains 能被选择器读到 ──────────────────────
+// domains / typed_intents 来自 delegation-manifest.json 的配方字段（各 21 条），
+// 不在 experts.json 里 —— 故必须从生成物正文实际读出，不能只信 frontmatter。
 console.log('');
 console.log('--- 参谋部可用性 ---');
 const withDomains = [...expertFamilies.keys()].filter((d) => {
   const text = readFileSync(join(SKILLS, d, 'SKILL.md'), 'utf8');
-  return /\*\*domains\*\*：\S/.test(text);
+  return /在团队中的职责[\s\S]{0,400}?配方 `/.test(text);
 });
-check('每个专家都声明了 domains（参谋部匹配依据）', withDomains.length === expertFamilies.size,
-  `仅 ${withDomains.length}/${expertFamilies.size} 个有 domains`);
+check('每个专家都声明了配方归属（参谋部匹配依据）', withDomains.length === expertFamilies.size,
+  `仅 ${withDomains.length}/${expertFamilies.size} 个有配方归属`);
 
 console.log('');
 console.log(`统计：主帅 ${leaders.length}，专家 ${experts.length}，主帅族 ${leaderFamilies.size}`);

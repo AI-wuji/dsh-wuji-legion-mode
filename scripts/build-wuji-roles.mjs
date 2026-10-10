@@ -16,6 +16,7 @@
 //   node scripts/build-wuji-roles.mjs --stats   只看统计
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
@@ -28,6 +29,13 @@ const OUT_DIRS = [
   join(repo, 'skills'),
   join(repo, 'packages', 'wuji-bundle', 'skills'),
 ];
+
+// 正文框架：委托给 rewrite-roles-framework.mjs（单一来源，避免两遍分叉）。
+//
+// ⚠️ 历史教训：框架渲染曾是**独立的一遍**（build 生成 → rewrite 重写），
+// 结果 verify-all.mjs 跑 build-wuji-roles.mjs 时把重写内容**覆盖回旧结构**，
+// 且当时误判为「重写失败」。现在渲染并入生成流程，生成即所得，不会再分叉。
+const FRAMEWORK_PATH = join(dirname(fileURLToPath(import.meta.url)), 'rewrite-roles-framework.mjs');
 
 const CHECK = process.argv.includes('--check');
 const STATS_ONLY = process.argv.includes('--stats');
@@ -410,7 +418,13 @@ for (const outDir of OUT_DIRS) {
         continue;
       }
       const actual = readFileSync(target, 'utf8').replace(/\r\n/g, '\n');
-      if (actual !== content) {
+      // 只比对 frontmatter 段：正文由 rewrite-roles-framework.mjs 渲染，
+      // 生成器手里的 content 只有 frontmatter。全文件比对会把正文判成 STALE（假阳性）。
+      const cut = (s) => {
+        const e = s.indexOf('\n---\n', 4);
+        return e < 0 ? s : s.slice(0, e + 5);
+      };
+      if (cut(actual) !== cut(content)) {
         console.error(`  STALE   ${target}`);
         mismatched += 1;
       }
@@ -444,6 +458,15 @@ if (CHECK) {
     process.exit(1);
   }
   console.log('[wuji-roles] 校验通过：所有角色文件与 4.0 源数据一致。');
+
+  // --check 也要验证正文框架，否则「frontmatter 对但正文是旧结构」会静默通过。
+  execFileSync(process.execPath, [FRAMEWORK_PATH, '--check'], { stdio: 'inherit', cwd: repo });
 } else {
+  // ── 正文按官方框架渲染 ────────────────────────────────────────────────────
+  // 必须在**文件写入之后**执行：写在前一步会被随后的 writeFileSync 覆盖回旧结构。
+  // （这正是本脚本早先的 bug —— 框架渲染放在写入之前，看起来像「重写失败」，
+  //   实际是被生成物覆盖。见 docs/ROLE-FRAMEWORK.md。）
+  const fw = execFileSync(process.execPath, [FRAMEWORK_PATH, '--apply'], { cwd: repo, encoding: 'utf8' });
+  process.stdout.write(fw);
   console.log(`[wuji-roles] 已写入 ${OUT_DIRS.map((d) => d.replace(repo, '.')).join(' 与 ')}`);
 }
