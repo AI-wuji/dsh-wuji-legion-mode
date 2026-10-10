@@ -37,7 +37,7 @@ description: 按无极军团4.0的任务优先方式完成跨专业工作，阿�
 | 多分支并发与 DAG | `workflow` 脚本的 `pipeline` / `parallel` / `phase` |
 | 长任务自动续跑 | `ralph` |
 | 跨回合目标 | `goal` |
-| 独立复核 | 新起 `subagent`，或官方 `dsh-experimental-auto-review` |
+| 独立复核 | 新起 `subagent`（`dsh-experimental-auto-review` **本机未安装，不可用**） |
 | 交付回执 | `present` |
 
 规则：

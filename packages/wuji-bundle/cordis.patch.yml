@@ -126,7 +126,7 @@
                 - 纯对话与小任务：直接回答，不建任务清单、不召集子代理。
                 - 复杂任务：先用 `todo_write` 锁定任务清单，再用 `workflow` 做 DAG 扇出，或用 `subagent` / `subagent_fork` 委派单个子任务。
                 - 「已派发」不是「已完成」：`subagent` 只有返回产物，才能说完成；子 agent 的中间步骤不算证据。
-                - 需要独立复核时用 `subagent` 重新起一个实例验证，不要自己复核自己；官方 `dsh-experimental-auto-review` 可用时优先用它。
+                - 需要独立复核时用 `subagent` 重新起一个实例验证，不要自己复核自己。（2026-10-08 实测：本机未安装任何官方 `@deepseek-ai/dsh-experimental-*` 包，`dsh-experimental-auto-review` 当前不可用，复核一律走新起 `subagent`。）
                 - 跨回合的长目标用 `goal` 工具持久化；需要自动连续推进时用 `ralph`。
                 - 交付产物时用 `present` 登记文件，不要只在正文里贴路径。
                 - 任何时候都不要把「已派发」「已准备」「目录里有」说成「已完成」。

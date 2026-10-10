@@ -51,7 +51,7 @@
 | 交付物 | `dsh-tool-present` + `dsh-client-ui-deliverables` | 官方交付物卡片 |
 | 权限 | `dsh-authorization` + `dsh-permission-presets` + `dsh-user-approval` | 原生授权链 |
 | 沙箱 | `dsh-sandbox-*` + `dsh-fs-sandbox` + `dsh-bash/pwsh-sandbox` | 原生隔离执行，替代自建隔离 |
-| 审查 | `dsh-experimental-auto-review` | 独立检查 |
+| 审查 | ~~`dsh-experimental-auto-review`~~ **本机未安装** | 独立检查改用新起 `subagent`（2026-10-08 实测） |
 | 脚本持久会话 | `dsh-tool-pwsh-persistent` / `dsh-tool-bash-persistent` | 保留 shell 状态 |
 | 定时 | `dsh-schedule` + `dsh-experimental-schedule-bundle` | 排程 |
 
@@ -79,7 +79,7 @@
 | 6 | 状态/引用/幂等 | Rust + SQLite | `dsh-session-query-sqlite` + `dsh-storage-json` | A | 0 |
 | 7 | 隔离执行 | 自建 workspace 隔离 | `dsh-sandbox-windows-acl` + `dsh-fs-sandbox` | A | 0 |
 | 8 | 权限/授权 | 自建授权检查 | `dsh-authorization` + `dsh-user-approval` | A | 0 |
-| 9 | 证据/回执 | `verify.go` 15KB | `dsh-experimental-auto-review` + `dsh-message-feedback` | A | 0 |
+| 9 | 证据/回执 | `verify.go` 15KB | 新起 `subagent`（独立复核）+ `dsh-message-feedback`（~~`dsh-experimental-auto-review`~~ 未安装） | A | 0 |
 | 10 | 上下文记账 | `context-gate.js` 6.5KB | `dsh-token-meter` + `compaction-*` | A | 0 |
 | 11 | 模型路由 | `model-policy.js` 4.3KB | `dsh-agent-default-model` + preset 配置 | A | 0 |
 | 12 | Office 交付 | officecli 适配器 + invoke.ps1 | `dsh-skill-office` + `libreoffice-kit` | A | 0 |
@@ -169,7 +169,7 @@ dsh-wuji-legion-mode/
 
 1. **上下文膨胀**：4.0 的 `experts.json` 有 147KB。**不得整包塞进 preset**，必须走 `skill-filesystem` 按需加载。
 2. **「有目录 ≠ 已执行」**：4.0 自己都标了 `runtime_admission=false`。新模式版必须用 `workflow`/`subagent` 的真实返回值作证据，不能把 skill 目录当能力证明。
-3. **`dsh-experimental-*` 稳定性**：agent-team、auto-review 标记为 experimental，作为可选增强，不进关键路径。
+3. **`dsh-experimental-*` 稳定性**：agent-team、auto-review 标记为 experimental，作为可选增强，不进关键路径。**（2026-10-08 实测：本机连一个 `@deepseek-ai/dsh-experimental-*` 包都没装，所以这两项当前是「零可用」，不是「可选增强」。）**
 4. **不碰全局配置**：遵守现有铁律十，不改模型/provider/凭据；preset 隔离只影响选中该模式的会话。
 5. **PonyTail 归属**：上游是 MIT 的 `DietrichGebert/ponytail`（157.8k star），保留署名与许可证。
 
