@@ -25,6 +25,34 @@
 
 详细设计见 [`docs/WUJI-4.0-DSH-DESIGN.md`](docs/WUJI-4.0-DSH-DESIGN.md)，逐版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
+## WorkBuddy 专家团融合
+
+已把 WorkBuddy `prompt-meta-team` 的 **12 个 agent** 真融合进军团，作为 `wb-*` 开头的
+DSH 技能随 preset 挂载。技能总数 **88 → 100**。
+
+| 中文名 | 技能 | 族 | 领域 |
+|---|---|---|---|
+| 范策 | `wb-prompt-meta-team-team-lead` | governance | 元指令总架构与编排 |
+| 唐砚 | `wb-narrative-architect` | writing | 小说推文/漫剧叙事结构 |
+| 苏墨 | `wb-image-prompt-architect` | image | T2I/I2I 图像提示词 |
+| 卢影 | `wb-video-prompt-architect` | video | H3 / Seedance 视频提示词 |
+| 顾形 | `wb-visual-asset-designer` | image | 四资产库与一致性协议 |
+| 陆镜 | `wb-storyboard-director` | video | 分镜/蒙太奇/运镜 |
+| 声场 | `wb-soundstage-architect` | audio | 声音工程与声场 |
+| 纪叙 | `wb-video-editing-architect` | video | 剪辑与节奏 |
+| 探源 | `wb-precedent-researcher` | research | 全网参考与成品比对 |
+| 镜观 | `wb-objective-critic` | governance | 第三方客观批判 |
+| 衡分 | `wb-scoring-expert` | governance | 量化打分与档位 |
+| 容知 | `wb-skill-evolution-architect` | governance | 能力资产演化 |
+
+**已实测派发**：`wb-scoring-expert` 对一份元指令草案做了真实模式 C 打分，产物落盘
+10,037 B / 123 行，结论 35/100 · D。它主动指出输入契约缺 sha256 与 preflight、
+自行降级为 `NO_PREFLIGHT`、并做了档位稳健性检验。**其余 11 个只验证了生成与加载，
+未逐个跑真实任务。**
+
+源材料改动后重跑 `node scripts\build-workbuddy-roles.mjs` 即可，不需要手写技能文件。
+详见 [`docs/WORKBUDDY-INTEGRATION.md`](docs/WORKBUDDY-INTEGRATION.md)。
+
 ## 2.0 历史说明
 
 2.0 在原有模式上完成了一次面向小白用户的升级（PonyTail 跨领域化、边界写清、隔离保留）。这些结论在 4.0 中继续成立，只是运行时实现换成了官方插件。
