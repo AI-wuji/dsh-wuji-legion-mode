@@ -61,6 +61,39 @@ const STEP_DESC = {
   'p3/selector/code-implementation': '按明确语言与目标接口实现',
 };
 const assignmentOf = new Map();
+
+// ── 按家族的主帅补充节 ───────────────────────────────────────────────────────
+// 为什么放这里：本文件是 role 正文的**唯一渲染源**；build-wuji-roles.mjs 的
+// renderLeader 只是被本文件覆盖的中间态。手写进产物的内容必被覆盖，故补充写在这。
+// 只有少数家族需要额外交代来源与工具依赖，故表驱动，不改模板本体。
+const LEADER_SUPPLEMENT = {
+  'meta-instruction': `
+> **本族不依赖任何 MCP**：所需能力（联网检索、文件读写、命令执行、产物登记）
+> 宿主已原生具备。引入外部工具的依据见 \`wuji-legion-4-0\` 的
+> 「领域工具：按需引入，不预先铺开」一节（**付费的直接不考虑**）。
+
+## 本族建立经过（可追溯）
+
+本族由 WorkBuddy \`prompt-meta-team\` 专家团**按职务命名复刻**而来：
+
+| 本族角色 | WorkBuddy 源 agent |
+|---|---|
+| 元指令主帅（本文件） | \`prompt-meta-team-team-lead\`（元指令总架构师） |
+| 叙事架构师 | \`narrative-architect\` |
+| 图像提示词架构师 | \`image-prompt-architect\` |
+| 全网参考检索与成品比对专家 | \`precedent-researcher\` |
+| 第三方客观评价专家 | \`objective-critic\` |
+| 输出内容打分专家 | \`scoring-expert\` |
+| 能力资产与Skill演化架构师 | \`skill-evolution-architect\` |
+
+源团共 12 个 agent；其余 5 个（视觉资产设计师、分镜导演、视频提示词架构师、
+声音设计与声场架构师、视频剪辑架构师）属于**视频创作**，本轮未建对应主帅 ——
+用户判定视频侧方案为收费，**付费的一律不做**。这 5 个仍以 \`wb-*\` 保留在库，
+未接入配方，参谋部选不到（如实记录，不粉饰）。
+`,
+};
+
+
 for (const rec of deleg.recipes) {
   for (const e of rec.expert_refs ?? []) {
     const base = e.role_id.split('/').pop();
@@ -311,7 +344,7 @@ ${recipeBlocks}
 **本轮按框架补写**：正文结构与四步流程，框架依据 = 官方元指令模板 W5 §2.1。
 
 上游对该目录的整体标注是「契约已写、专业效果未验证」；本文件证明**组织关系已定义**，
-**不证明该族的专业质量已达标**。`;
+**不证明该族的专业质量已达标**。${LEADER_SUPPLEMENT[fam] ?? ''}`;
 }
 
 // ── 主流程 ──────────────────────────────────────────────────────────────────

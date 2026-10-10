@@ -55,6 +55,21 @@ function readSource() {
   };
 }
 
+// ── 非本生成器产出的角色（WorkBuddy 专家团复刻）────────────────────────────
+// 这些角色来自 WorkBuddy `prompt-meta-team`，**不来自** `catalog/p3`。
+// 本生成器不渲染它们，因此：
+//   ① 清理阶段必须跳过，否则每次 build 都会删掉（曾真实发生，6 个专家被删）；
+//   ② 一致性检查必须跳过，否则会误报 ORPHAN。
+// 它们的真源是 `skills/` 里的手写/半手工文件 + `delegation-manifest.json` 的配方登记。
+const FOREIGN = new Set([
+  'wuji-expert-narrative-architect',
+  'wuji-expert-image-prompt-architect',
+  'wuji-expert-precedent-researcher',
+  'wuji-expert-objective-critic',
+  'wuji-expert-scoring-expert',
+  'wuji-expert-skill-evolution',
+]);
+
 // ── 建立索引 ────────────────────────────────────────────────────────────────
 function buildIndex({ experts, delegation }) {
   // 角色 id -> 角色定义
@@ -431,6 +446,7 @@ for (const outDir of OUT_DIRS) {
     }
     // 检查是否有孤儿角色文件（源数据里已删，生成物还在）
     for (const entry of readdirSync(outDir)) {
+      if (FOREIGN.has(entry)) continue;
       if (!entry.startsWith('wuji-leader-') && !entry.startsWith('wuji-expert-')) continue;
       if (!files.has(`${entry}/SKILL.md`)) {
         console.error(`  ORPHAN  ${join(outDir, entry)}（源数据中已不存在）`);
@@ -439,7 +455,9 @@ for (const outDir of OUT_DIRS) {
     }
   } else {
     // 先清掉旧的生成物（只清带前缀的，不动其他技能）
+    // ⚠️ 例外见模块级 FOREIGN 的注释。
     for (const entry of readdirSync(outDir)) {
+      if (FOREIGN.has(entry)) continue;
       if (entry.startsWith('wuji-leader-') || entry.startsWith('wuji-expert-')) {
         rmSync(join(outDir, entry), { recursive: true, force: true });
       }
