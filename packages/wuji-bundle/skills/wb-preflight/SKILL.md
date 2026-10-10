@@ -1,8 +1,36 @@
+---
+name: wb-preflight
+description: 无极军团确定性前置检查规范（WorkBuddy 融合，35 项）：在派 LLM 评审之前，先用机器判定可确定性判定的项，缺 sha256 或 preflight 报告时评审必须如实标注降级而非假装有。当子任务涉及 WorkBuddy 产物评审、需要 preflight 报告、需要产物 sha256 绑定、或评审角色报告「缺 preflight / 缺 sha256」时加载本文件。
+whenToUse: 派 WorkBuddy 系专家做评审前、需要产出 preflight 报告、需要 sha256 绑定、或产物/评审结论需要绑定身份哈希时。
+kind: reference
+family: governance
+source: workbuddy-prompt-meta-team
+source_agent: eval/preflight.md
+---
+
 # 确定性前置检查（Preflight）
 
 > **来源**：WorkBuddy `prompt-meta-team` 的 `eval/preflight.md`，经无极军团融合。
 > **执行者**：主理人（`wb-prompt-meta-team-team-lead`）或编排方。
 > **时机**：每份产物落盘后、**派评审之前**。
+>
+> **可执行实现**：`scripts/wb-preflight.mjs <产物文件> [--family <族>] [--json] [--report auto]`
+>
+> **族无关**：本清单虽源自 WorkBuddy，但其中族无关项（sha256 绑定、版本标识、跨模型语法混写、禁用空词、滑块数值入正文）**对任何族的产物都适用**，不限于 image/video。可直接用于 wuji-expert-* 系列的产物自检。
+
+## 实测记录（2026-10 本轮）
+
+跑 `scripts/wb-preflight.mjs` 对 5 个正向样本（代码/技能/文档/两份提示词产物）+ 5 个反向样本（禁用空词/滑块数值/缺版本头/语法混写/空文件）的结果：
+
+正向 **5/5 PASS**（无噪声），反向 **4/5 抓到**。
+
+**一个未消解的漏报**：`neg-noversion.md`（裸提示词，无版本头、路径也无特征）掉进了 `docs` 族，#3 被跳过。
+
+- **成因**：族判定靠「内容含 `[model: ...]`」或「路径含关键词」。两者都没有时无法识别。
+- **不是 bug，是固有局限**：内容里没有任何可识别的族特征，本身就无从判定。
+- **绕法**：显式指定 `--family prompt-artifact`。
+- **教训**：族判定必须**先看内容再看路径**。初版只看路径，`neg-*.md` 掉进 docs 族，导致 #3/#7/#22 全被跳过 —— 真问题被漏报。**这正是「反向验证」的价值：不做这一步，会把「全绿」当成功，而实际是检查器被自己阉割了。**
+
 
 ## 原则
 

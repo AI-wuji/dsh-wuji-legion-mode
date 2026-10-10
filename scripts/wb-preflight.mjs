@@ -38,11 +38,61 @@ const MAX_CHARS_IDX = argv.indexOf('--max-chars');
 const MAX_CHARS = MAX_CHARS_IDX >= 0 ? Number(argv[MAX_CHARS_IDX + 1]) : 0;
 
 if (!target) {
-  console.error('用法: node scripts/wb-preflight.mjs <产物文件> [--max-chars N] [--json] [--report <路径>]');
+  console.error('用法: node scripts/wb-preflight.mjs <产物文件> [--family <族>] [--max-chars N] [--json] [--report <路径>]');
   process.exit(2);
 }
 
 const abs = resolve(target);
+
+// ── 族判定 ──────────────────────────────────────────────────────────────────
+// 这 35 项里大量是 WorkBuddy 视频/图像域专属（H3 运镜三维度、Seedance 素材派活、
+// 旁白字数区间、时长能力档案…）。机械套到代码文件或 README 上只会制造噪声 ——
+// 实测跑一次，代码文件和 README 全部报 FAIL，而它们其实没有任何问题。
+// 一个对什么都报错的检查器等于没有检查器。所以在跑之前先判族，只跑相关的项。
+const FAMILY_PATTERNS = [
+  { family: 'prompt-artifact', re: /提示词|元指令|prompt|反推|扩写/i, desc: '提示词/元指令产物' },
+  { family: 'video', re: /storyboard|分镜|镜头|视频|video|seedance|h3|旁白|运镜/i, desc: '视频域产物' },
+  { family: 'audio', re: /声音|音频|音效|台词|配音|audio|sound|music/i, desc: '声音域产物' },
+  { family: 'software', re: /\.(mjs|cjs|js|ts|py|go|rs|cpp|java)$/i, desc: '代码/脚本' },
+  { family: 'skill', re: /SKILL\.md$/i, desc: '技能定义文件' },
+  { family: 'docs', re: /README|CHANGELOG|\.md$/i, desc: '文档' },
+];
+
+const FAMILY_ARG_IDX = argv.indexOf('--family');
+const explicitFamily = FAMILY_ARG_IDX >= 0 ? argv[FAMILY_ARG_IDX + 1] : null;
+
+const detectFamily = () => {
+  if (explicitFamily) return { family: explicitFamily, how: '--family 显式指定' };
+  // 先看**内容**再看路径：只看路径会被文件名骗。
+  // 实测踩过：`neg-banned.md` 这类测试产物路径里没有「提示词」字样，
+  // 就掉进了 docs 族，于是 #3/#7/#22 全被跳过 → 真问题被漏报。
+  try {
+    const head = readFileSync(abs, 'utf8').slice(0, 4000);
+    if (/\[model:\s*\w/.test(head)) {
+      return { family: 'prompt-artifact', how: '内容含 `[model: ...]` 版本头' };
+    }
+  } catch { /* 读不到就走路径判定 */ }
+  for (const p of FAMILY_PATTERNS) {
+    if (p.re.test(abs)) return { family: p.family, how: `路径匹配「${p.desc}」` };
+  }
+  return { family: 'universal', how: '无族特征，只跑族无关项' };
+};
+
+const fam = detectFamily();
+
+// 族 → 该族适用的检查项。ID 用字符串，因为子项形如 "16a"（不是合法数字字面量）。
+// 未列出的项对该族判 NOT_APPLICABLE：明确说"本族不适用"，而不是静默跳过。
+const FAMILY_CHECKS = {
+  universal: ['1', '2', '7', '17', '21', '22'],
+  'prompt-artifact': ['1', '2', '3', '7', '9', '16', '17', '21', '22'],
+  video: ['1', '2', '3', '7', '9', '10', '11', '13', '16a', '16b', '16c', '17', '21', '22'],
+  audio: ['1', '2', '3', '7', '9', '17', '21', '22'],
+  software: ['1', '2', '21'],
+  skill: ['1', '2', '21'],
+  docs: ['1', '2', '21'],
+};
+const applicable = new Set(FAMILY_CHECKS[fam.family] ?? FAMILY_CHECKS.universal);
+
 
 // ── #1 产物存在且非空 ────────────────────────────────────────────────────────
 if (!existsSync(abs)) {
@@ -78,7 +128,7 @@ const SYNTAX_FAMILIES = [
   { name: 'SDXL/booru 逗号标签习惯', pat: /\bmasterpiece\b.*\bbest quality\b/i },
   { name: 'Negative Prompt 槽位', pat: /^\s*Negative Prompt:/im },
   { name: 'YuE2 字段', pat: /\bcot\s*[:=]\s*(full|melody|none)\b/i },
-  { name: 'Seedance Asset mapping', pat: /\bAsset mapping\b/i },
+  { name: 'Seedance Asset mapping', pat: /\bAsset\s*mapping\b|asset_mapping/i },
 ];
 const presentFamilies = SYNTAX_FAMILIES.filter((f) => f.pat.test(text)).map((f) => f.name);
 
@@ -133,36 +183,38 @@ for (const m of text.matchAll(/\b(cfg|steps|strength|denoise|guidance)\s*[:=]\s*
 const checks = [];
 const add = (id, name, status, detail) => checks.push({ id, name, status, detail });
 
-add(1, '产物存在且非空', 'PASS', `${size} 字节`);
-add(2, 'sha256 已计算', 'PASS', sha256);
-add(3, '头部版本标识', versionTag ? 'PASS' : 'REVISE', versionTag ? versionTag[0] : '未找到 `[... version: Y]` 标记');
-add(4, '字段名官方一致', 'NOT_IMPL', '需要领域字段清单');
-add(5, '必填字段齐全', 'NOT_IMPL', '需要结构化输入');
-add(6, '结构标签位置', 'NOT_IMPL', '需要结构化输入');
-add(7, '无跨模型语法混写', presentFamilies.length > 1 ? 'REBUILD' : 'PASS',
+// gate = 受族判定约束的项；不适用的明确标注，而不是静默跳过。
+const gate = (id, name, status, detail) =>
+  add(id, name, applicable.has(id) ? status : 'NOT_APPLICABLE',
+    applicable.has(id) ? detail : `本族（${fam.family}）不适用此检查项`);
+
+gate('1', '产物存在且非空', 'PASS', `${size} 字节`);
+gate('2', 'sha256 已计算', 'PASS', sha256);
+gate('3', '头部版本标识', versionTag ? 'PASS' : 'REVISE', versionTag ? versionTag[0] : '未找到 `[... version: Y]` 标记');
+add('4', '字段名官方一致', 'NOT_IMPL', '需要领域字段清单');
+add('5', '必填字段齐全', 'NOT_IMPL', '需要结构化输入');
+add('6', '结构标签位置', 'NOT_IMPL', '需要结构化输入');
+gate('7', '无跨模型语法混写', presentFamilies.length > 1 ? 'REBUILD' : 'PASS',
   presentFamilies.length > 1 ? `检出多个语法家族: ${presentFamilies.join(' / ')}` : `仅检出: ${presentFamilies.join(' / ') || '无'}`);
-add(8, '参考标签编号连续', 'NOT_IMPL', '需要结构化输入');
-add(9, '字符数在上限内', overLimit ? 'REVISE' : 'PASS',
+add('8', '参考标签编号连续', 'NOT_IMPL', '需要结构化输入');
+gate('9', '字符数在上限内', overLimit ? 'REVISE' : 'PASS',
   MAX_CHARS > 0 ? `${charCount} / 上限 ${MAX_CHARS}` : `${charCount} 字符（未设上限，未判定）`);
-add(17, '证据等级覆盖', isDocMode
+gate('17', '证据等级覆盖', isDocMode
   ? (evidenceMarked > 0 ? 'PASS' : 'REVISE')
   : 'NOT_APPLICABLE',
 isDocMode
   ? `文档模式：检出 ${evidenceMarked} 处证据等级标记`
   : `纯产物模式：本文件按 G11 纯产物约束编写，证据等级应在配套说明文件中查（本文件检出 ${evidenceMarked} 处，不参与判定）`);
-add(21, '无禁用空词', bannedHits.length ? 'REVISE' : 'PASS', bannedHits.length ? bannedHits.join('、') : '无');
-add(22, '无滑块数值写入', sliderHits.length ? 'REVISE' : 'PASS', sliderHits.length ? sliderHits.join('、') : '无');
+gate('21', '无禁用空词', bannedHits.length ? 'REVISE' : 'PASS', bannedHits.length ? bannedHits.join('、') : '无');
+gate('22', '无滑块数值写入', sliderHits.length ? 'REVISE' : 'PASS', sliderHits.length ? sliderHits.join('、') : '无');
 
-const impl = checks.filter((c) => c.status !== 'NOT_IMPL');
+const impl = checks.filter((c) => c.status !== 'NOT_IMPL' && c.status !== 'NOT_APPLICABLE');
+const skipped = checks.filter((c) => c.status === 'NOT_APPLICABLE');
 const failed = impl.filter((c) => c.status !== 'PASS');
-const worst = failed.some((c) => c.status === 'REBUILD') || failed.some((c) => c.status === 'BLOCKED')
-  ? 'FAIL'
-  : failed.length
-    ? 'FAIL'
-    : 'PASS';
+const worst = failed.length ? 'FAIL' : 'PASS';
 
 const disposition = (() => {
-  if (failed.some((c) => c.id === 1 || c.id === 2)) return 'BLOCKED';
+  if (failed.some((c) => c.id === '1' || c.id === '2')) return 'BLOCKED';
   if (failed.some((c) => c.status === 'REBUILD')) return 'REBUILD';
   if (failed.length) return 'REVISE';
   return 'PASS（仅就已实现项而言）';
@@ -171,18 +223,22 @@ const disposition = (() => {
 const report = {
   target: abs,
   name: basename(abs),
+  family: fam.family,
+  familyHow: fam.how,
   sha256,
   bytes: size,
   chars: charCount,
   checksTotal: 35,
   checksImplemented: impl.length,
-  checksNotImplemented: checks.length - impl.length,
+  checksNotImplemented: checks.length - impl.length - skipped.length,
+  checksNotApplicable: skipped.length,
   checks,
   result: worst,
   disposition,
   honesty: [
     '本报告只覆盖已实现的检查项；NOT_IMPL 项未经检查，不得读作通过。',
     'WorkBuddy 规范共 35 项，本脚本已实现项数见 checksImplemented。',
+    `本族（${fam.family}）不适用的项标 NOT_APPLICABLE，不得读作通过。`,
     '判定为启发式的地方（#7 语法混写）可能误报或漏报，已在 detail 中说明依据。',
     'sha256 由本脚本直接计算，不采信文件内的声明值。',
   ],
@@ -193,10 +249,12 @@ if (REPORT_PATH) {
     `[preflight: ${report.name}, version: 1]`,
     `产物路径: ${report.target}`,
     `sha256: ${report.sha256}`,
-    `检查项总数: 35（本次已实现 ${report.checksImplemented} 项）`,
+    `检查项总数: 35（本族 ${report.family} 适用 ${report.checksImplemented} 项）`,
+    `族判定: ${report.family} —— ${report.familyHow}`,
     `通过: ${checks.filter((c) => c.status === 'PASS').map((c) => c.id).join(',') || '（无）'}`,
     `未通过: ${failed.map((c) => `${c.id} → ${c.detail}`).join('\n        ') || '（无）'}`,
     `未实现: ${checks.filter((c) => c.status === 'NOT_IMPL').map((c) => c.id).join(',') || '（无）'}`,
+    `本族不适用: ${skipped.map((c) => c.id).join(',') || '（无）'}`,
     `结果: ${report.result}`,
     `处置: ${report.disposition}`,
     '',
@@ -227,10 +285,11 @@ function emit(obj) {
     return;
   }
   // 人类可读
-  const icon = (s) => ({ PASS: '✅', REVISE: '⚠️', REBUILD: '❌', NOT_IMPL: '⬜', FAIL: '❌', BLOCKED: '🚫' }[s] ?? '?');
+  const icon = (s) => ({ PASS: '✅', REVISE: '⚠️', REBUILD: '❌', NOT_IMPL: '⬜', NOT_APPLICABLE: '➖', FAIL: '❌', BLOCKED: '🚫' }[s] ?? '?');
   console.log(`[preflight] ${obj.name}`);
+  console.log(`  族判定: ${obj.family ?? '—'} —— ${obj.familyHow ?? '—'}`);
   console.log(`  sha256: ${obj.sha256 ?? '（未计算）'}`);
-  console.log(`  检查项总数: 35（已实现 ${obj.checksImplemented ?? '—'} 项）`);
+  console.log(`  检查项总数: 35（本族适用 ${obj.checksImplemented ?? '—'} 项）`);
   console.log('');
   for (const c of obj.checks) console.log(`  ${icon(c.status)} #${c.id} ${c.name} — ${c.detail}`);
   console.log('');
