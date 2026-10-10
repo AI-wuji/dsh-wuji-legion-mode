@@ -315,6 +315,15 @@
     # Product providers are host-plane singletons. Copy this preset, then
     # remove `disabled` from either ordinary tool row to expose that product
     # only to agents composed from the copy.
+    #
+    # ⚠️ 启用前必须先改 `maxDepth: provider-managed` —— 它是**字符串**，而
+    #    @deepseek-ai/dsh-subagent 的 Config 把它声明为
+    #    `z.number().step(1).min(0).max(...).default(1)`
+    #    （见该包 lib/types/index.js:76）。类型不符会让 preset 的 activation
+    #    audit 失败、**整个 mount 被拒**，症状和下面 workflow 那条同款：
+    #    「preset 已注册但选择器里看不到、新建会话仍是 standard」。
+    #    启用时改成数字（如 `maxDepth: 3`），语义可参照官方该 provider 的能力。
+    #    当前两行都是 `disabled: true`，故该问题**不会发生**——这是隐患标注，不是缺陷。
     - id: tool-subagent-codex
       name: '@deepseek-ai/dsh-tool-subagent'
       disabled: true
