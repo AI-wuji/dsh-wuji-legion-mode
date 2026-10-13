@@ -77,6 +77,8 @@ const FOREIGN = new Set([
   'wuji-expert-comfyui-frontend-backend',
   'wuji-expert-comfyui-native-extension',
   'wuji-expert-comfyui-verification-diagnosis',
+  // software 族（WorkBuddy my-experts/model-dedup，第二个插件来源）
+  'wuji-expert-model-dedup',
 ]);
 
 // ── 已被合并、必须从源数据与产物中移除的旧角色 ──────────────────────────

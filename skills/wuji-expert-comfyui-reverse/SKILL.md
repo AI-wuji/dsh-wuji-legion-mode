@@ -33,8 +33,8 @@ source_id: p3/leaf/comfyui-reverse
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：解析既有节点/插件的注册入口、张量类型、错误与数据流（必需成员）
-- 配方 `comfyui-plugin-delivery`：需要解析既有插件实现时提供行为规格（必需成员）
+- 配方 `comfyui-delivery`：解析既有节点/插件的注册入口、张量类型、错误与数据流（按需成员），触发意图：comfyui_analysis、comfyui_fusion
+- 配方 `comfyui-plugin-delivery`：需要解析既有插件实现时提供行为规格（按需成员），触发意图：comfyui_plugin_dev、comfyui_compat
 
 ## 工作流程
 

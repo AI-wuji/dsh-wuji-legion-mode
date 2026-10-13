@@ -55,6 +55,7 @@ recipes: [software-delivery]
     - `wuji-expert-go-engineer`（触发意图：go_implementation） — 协议/并发/取消/资源释放
     - `wuji-expert-cpp-engineer`（触发意图：cpp_implementation） — ABI/内存/设备/数值容差/回退
     - `wuji-expert-code-review`（必需） — 具体改动锚点、可触发后果、独立于作者
+    - `wuji-expert-model-dedup`（触发意图：model_file_rewrite、hash_divergence） — 只在需要改写模型文件字节以改变哈希、且必须保持权重可加载时参与；产出新文件不覆盖原件，并回交新旧哈希对照
   - 验收默认：scope-locked、write-set-unique、regression-or-review-evidence
 
 ## 输出

@@ -115,3 +115,50 @@ W5 §2.1（角色/任务/流程/约束/输出）；该模板在 4.0 执行计划
 
 上游对该目录的整体标注是「契约已写、专业效果未验证」。因此本文件证明的是
 **职责已定义且可被选择**，**不证明该职责已被独立验收** —— 实际效果必须以真实产物回交为准。
+## 可用工具：REA（逆向工程 MCP 服务）
+
+**已配置并可调用。** 通过 `@deepseek-ai/dsh-mcp-client` 以 stdio 方式挂载在
+**profile patch 顶层**，工具名前缀 `mcp__rea__`，共 **139 个**。
+
+### 能力对照
+
+| 需求 | 工具（`mcp__rea__` 前缀） |
+|---|---|
+| 反编译 / 反汇编 | `decompile`、`disassemble` |
+| 原生函数分析 | `annotate_native_function`、`inspect_native_instruction` |
+| 原生加载镜像 / 数据类型 | `inspect_native_load_image`、`inspect_native_data_type` |
+| 调用关系与目标解析 | `resolve_native_call_targets` |
+| 符号与地址命名 | `address_name`、`current_address` |
+| 注释 | `comment` |
+
+### 调用时机
+
+只有在**需要真实二进制证据**时调用（反编译产物、符号表、调用图、字符串）。
+不要把工具名当结论，也不要用它替代授权判断。
+
+### 平台限制（不写清会报错误的 BLOCKED）
+
+- **Windows**：Ghidra 原生深度分析为 `experimental`，部分能力受限
+- **Hopper**：仅 macOS 可用
+- **Binwalk / Unblob + PTY**：需 Linux
+- 同一工具在不同 OS 上可达性不同，报 `BLOCKED` 前先核对平台
+
+### 授权边界（不可削弱）
+
+- **工具存在 ≠ 有权使用**。能用工具读到的文件不等于被授权分析；授权契约仍是前置。
+- 缺 `AuthorizedInterface` → 如实报 `BLOCKED`，不绕过。
+- 不因工具而改口径：引入工具不降低证据标准。
+
+### 配置位置
+
+- `C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml` **顶层的 `- insert:` 列表**，
+  条目 `id: mcp-rea`，`name: '@deepseek-ai/dsh-mcp-client'`，`serverName: rea`
+- `failOnStartupError: false` —— 外部工具缺失不让整个军团挂载失败
+- `toolCallTimeoutMs: 600000` —— 反编译类长任务，默认超时会误杀
+
+> ⚠️ **mcp-rea 不能写在 preset 的 `plugins` 里**（曾经如此，结果永不激活，且完全静默）。
+> `@deepseek-ai/dsh-mcp-client` 注册 `tools` 服务，在 preset 的 realm 里会被
+> `dsh-agent-preset-registry` 的 `mountPreset()` 判为泄漏到 root realm，抛出
+> `Preset services require isolate realms: tools`，导致**整份 preset 挂载被拒**；
+> 失败只走 `logger.warn`，所以症状是「插件已配置却从不出现」。
+> 必须挂在 profile patch 顶层（同机 `web` profile 的 `mcp-playwright` 用同一插件挂顶层，工作正常）。

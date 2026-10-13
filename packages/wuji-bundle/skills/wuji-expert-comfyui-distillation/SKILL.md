@@ -33,8 +33,8 @@ source_id: p3/leaf/comfyui-distillation
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：复刻融合时比较两套行为，保证单一新实现且保留专业差异（必需成员）
-- 配方 `comfyui-plugin-delivery`：需要复刻或融合既有节点时保证单一新实现并保留专业差异（必需成员）
+- 配方 `comfyui-delivery`：复刻融合时比较两套行为，保证单一新实现且保留专业差异（按需成员），触发意图：comfyui_fusion
+- 配方 `comfyui-plugin-delivery`：需要复刻或融合既有节点时保证单一新实现并保留专业差异（按需成员），触发意图：comfyui_compat
 
 ## 工作流程
 

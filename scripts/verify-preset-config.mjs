@@ -97,8 +97,8 @@ const yaml = yamlMod.default ?? yamlMod;
 const jsType = new yaml.Type('tag:yaml.org,2002:js', { kind: 'scalar', construct: (d) => ({ __js: d }) });
 const doc = yaml.load(readFileSync(PATCH, 'utf8'), { schema: yaml.DEFAULT_SCHEMA.extend({ explicit: [jsType] }) });
 
-const row = doc.find((r) => r.insert?.some((x) => x.id === 'preset-wuji'))?.insert.find((x) => x.id === 'preset-wuji');
-if (!row) {
+const presetRows = doc.flatMap((r) => (r.insert ?? []).filter((x) => x.name === '@deepseek-ai/dsh-agent-preset'));
+if (!presetRows.some((r) => r.id === 'preset-wuji')) {
   console.error('preset-wuji 未找到');
   process.exit(1);
 }
@@ -110,7 +110,7 @@ const walk = (rows, parent) => {
     if (Array.isArray(r.config)) walk(r.config, r.id);
   }
 };
-walk(row.config.plugins, 'preset-wuji');
+for (const presetRow of presetRows) walk(presetRow.config?.plugins, presetRow.id);
 
 const problems = [];
 let checked = 0;

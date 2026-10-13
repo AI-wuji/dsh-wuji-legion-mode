@@ -5,6 +5,13 @@
 
 ---
 
+## 2026-10-14 · REA 按需隔离与角色池门禁修复
+
+- 修复 `scripts/build-wuji-preset.mjs`：bundle 同时注册 `preset-wuji` 与独立 `preset-rea`；REA 不再生成到 profile 顶层，普通无极军团会话不加载 139 个 REA 工具。
+- 同步更新 `scripts/check-wuji-preset.mjs` 与 `scripts/verify-preset-config.mjs`，门禁现在检查两个 preset，并明确禁止 profile 顶层 `mcp-rea`。
+- 更新 `wuji-expert-software-reverse` 的工具边界：REA 只在明确的逆向 preset/session 中按需挂载；工具存在不等于授权或专业效果通过。
+- 修复 WorkBuddy 外部角色的 4.0 元数据、配方归属、输入门和回交自检；允许 `model-dedup/bin` 作为支撑资产目录，但不允许嵌套第二个 Skill 角色。
+- 已通过：`node scripts/verify-all.mjs`、角色可发现性、配置 schema、包存在性、参谋部跨主帅选择和自研插件真实 import/apply 回归。
 ## [4.2.0] — 2026-10-10
 
 **角色框架统一**：73 个角色（57 专家 + 16 主帅）正文从「结构化字段转录」

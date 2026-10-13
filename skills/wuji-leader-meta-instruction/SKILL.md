@@ -3,7 +3,7 @@ name: wuji-leader-meta-instruction
 description: 无极军团 4.0 主帅「meta-instruction」专家团：承接 evolution/governance/meta_instruction/prompt_meta 领域的子任务。当任务涉及 evolution、governance、meta_instruction 时加载本文件。它组织本族专家完成交付并汇总回交，不代写成员制品。
 kind: leader
 family: meta-instruction
-source_family_id: meta-instruction
+source_family_id: lead.meta-instruction
 leader_id: leader/meta-instruction
 recipes: [meta-instruction-design, meta-instruction-governance, meta-instruction-model-rewrite]
 ---

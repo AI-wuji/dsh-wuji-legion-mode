@@ -85,12 +85,13 @@ const header = [
   '# `@deepseek-ai/dsh-agent-preset` 声明，plugins 为 preset/agent.cordis.yml 的内容，',
   '# name / description / order 取自 preset/preset.yml。',
   '#',
-  '# 本层只声明 preset，不含任何 Host 平面行：军团能力全部由官方 @deepseek-ai/*',
-  '# 插件行承载，挂在 preset 内，其他 preset 因此完全不受影响。',
+  '# preset 内的军团能力全部由官方 @deepseek-ai/* 插件行承载，其他 preset 不受影响。',
+  '# 同一 bundle 同时注册无极军团 preset 与独立逆向（REA）preset；REA 只在用户选择该 preset 时加载。',
   '#',
   '# 改 persona、铁律或工具装配 → 改 preset/agent.cordis.yml → 重跑本脚本。',
   '# `--check` 校验生成物与源文件是否同步。',
   '#',
+  '# 顶层第二个 `- insert:` 是独立的 preset-rea 行，不是 profile 级工具。',  '#',
   '# 安装：plugin_manager / action: install_bundle / target: 本 bundle 目录绝对路径。',
   '# 不要手工拷贝包或手改 profile package.json，那样注册的 bundle 不会被识别。',
   '',
@@ -105,7 +106,74 @@ const header = [
   '        plugins:',
 ].join('\n');
 
-const output = `${header}\n${indent(body, 10)}\n`;
+// ---- 独立逆向 preset：只在用户选择 preset-rea 时挂载 REA -----------
+//
+// REA 注册的是 host tools 服务。当前 DSH 已验证把它放进一个独立
+// @deepseek-ai/dsh-agent-preset 可以正常启动；真正的问题是把它放在 profile
+// 顶层会污染该 profile 下的所有会话。因此这里与桌面端已验证结构保持一致：
+// 同一 bundle 注册两个可选 preset，普通 preset-wuji 不包含 mcp-rea。
+//
+// 使用 process.execPath 与用户目录表达式，避免把本机 node/REA 绝对路径写进公开包。
+const reaPresetInsert = [
+  '',
+  '# ── 独立逆向 preset：REA 仅按需加载 ─────────────────────────────────────────',
+  '# 选择「无极军团」时不启动 REA；只有选择「逆向（REA）」时才挂载 139 个工具。',
+  '- insert:',
+  '    - id: preset-rea',
+  "      name: '@deepseek-ai/dsh-agent-preset'",
+  '      config:',
+  '        id: rea',
+  '        name: 逆向（REA）',
+  '        description: >-',
+  '          独立逆向模式：按需挂载 REA 逆向工程工具；日常无极军团会话不加载 REA。',
+  '        order: 60',
+  '        plugins:',
+  '          - id: persona',
+  "            name: '@deepseek-ai/dsh-persona'",
+  '            config:',
+  '              prefix: |- ',
+  '                你是逆向工程助手，运行在 DeepSeek Harness 上，当前模型 {{model}}，工作目录 {{cwd}}。',
+  '',
+  '                先确认目标与授权范围，再用实际静态或动态工具取证。区分观察事实与推断，',
+  '                关键结论尽量交叉验证；遇到工具缺失、平台不支持或超时，直接报告阻塞。',
+  '                不把工具名称、文件名或猜测当成行为事实，交付必报路径。',
+  '              complete: true',
+  '              includeRuntimeContext: true',
+  '          - id: agent-instructions',
+  "            name: '@deepseek-ai/dsh-agent-instructions'",
+  '            config:',
+  '              maxBytes: 65536',
+  '          - id: tool-pwsh',
+  "            name: '@deepseek-ai/dsh-tool-pwsh'",
+  '            disabled: !!js process.platform !== \'win32\'',
+  '          - id: tool-fs',
+  "            name: '@deepseek-ai/dsh-tool-fs'",
+  '          - id: tool-fs-search',
+  "            name: '@deepseek-ai/dsh-tool-fs-search'",
+  '            config:',
+  '              sampleOverCapGlobResults: false',
+  '          - id: tool-jobs',
+  "            name: '@deepseek-ai/dsh-tool-jobs'",
+  '          - id: skill-filesystem',
+  "            name: '@deepseek-ai/dsh-skill-filesystem'",
+  '          - id: tool-skill',
+  "            name: '@deepseek-ai/dsh-tool-skill'",
+  '          - id: present',
+  "            name: '@deepseek-ai/dsh-tool-present'",
+  '          - id: mcp-rea',
+  "            name: '@deepseek-ai/dsh-mcp-client'",
+  '            config:',
+  '              transport: stdio',
+  '              serverName: rea',
+  '              command: !!js process.execPath',
+  '              args:',
+  "                - !!js \"process.getBuiltinModule('node:path').join(process.getBuiltinModule('node:os').homedir(), 'AppData', 'Roaming', 'npm', 'node_modules', 'rea-agents', 'scripts', 'rea.mjs')\"",
+  '                - \'--mcp\'',
+  '              toolCallTimeoutMs: 600000',
+  '              failOnStartupError: false',
+].join('\n');
+
+const output = `${header}\n${indent(body, 10)}\n${reaPresetInsert}\n`;
 
 // ---- 输出或校验 ----------------------------------------------------------
 if (process.argv.includes('--check')) {

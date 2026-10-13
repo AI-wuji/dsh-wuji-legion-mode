@@ -393,11 +393,70 @@ for (const r of experts.roles) roles.set(r.baseline_id, r);
 const results = { written: 0, skipped: 0, missing: 0, changed: 0, unchanged: 0 };
 const diffs = [];
 
+// ── 正文附加节（生成器重写时**必须保留**的专家专属内容）─────────────────
+//
+// 为什么需要这张表：本脚本会把每个角色的正文**整体重写**。任何手写在
+// SKILL.md 里、但不在源数据中的内容，都会在下一次 build 时被覆盖掉
+// —— 已真实发生过：`wuji-expert-software-reverse` 的「可用工具：REA」整节
+// 就此丢失（既不在 catalog/p3，也不在 git 历史里，是未提交的手工附加）。
+//
+// 结论：**专家专属的、源数据里没有的内容，必须写在这里**，不能手改产物。
+const ADDENDA = {
+  'wuji-expert-software-reverse': `
+## 可用工具：REA（逆向工程 MCP 服务）
+
+**已配置并可调用。** 通过 \`@deepseek-ai/dsh-mcp-client\` 以 stdio 方式挂载在
+**profile patch 顶层**，工具名前缀 \`mcp__rea__\`，共 **139 个**。
+
+### 能力对照
+
+| 需求 | 工具（\`mcp__rea__\` 前缀） |
+|---|---|
+| 反编译 / 反汇编 | \`decompile\`、\`disassemble\` |
+| 原生函数分析 | \`annotate_native_function\`、\`inspect_native_instruction\` |
+| 原生加载镜像 / 数据类型 | \`inspect_native_load_image\`、\`inspect_native_data_type\` |
+| 调用关系与目标解析 | \`resolve_native_call_targets\` |
+| 符号与地址命名 | \`address_name\`、\`current_address\` |
+| 注释 | \`comment\` |
+
+### 调用时机
+
+只有在**需要真实二进制证据**时调用（反编译产物、符号表、调用图、字符串）。
+不要把工具名当结论，也不要用它替代授权判断。
+
+### 平台限制（不写清会报错误的 BLOCKED）
+
+- **Windows**：Ghidra 原生深度分析为 \`experimental\`，部分能力受限
+- **Hopper**：仅 macOS 可用
+- **Binwalk / Unblob + PTY**：需 Linux
+- 同一工具在不同 OS 上可达性不同，报 \`BLOCKED\` 前先核对平台
+
+### 授权边界（不可削弱）
+
+- **工具存在 ≠ 有权使用**。能用工具读到的文件不等于被授权分析；授权契约仍是前置。
+- 缺 \`AuthorizedInterface\` → 如实报 \`BLOCKED\`，不绕过。
+- 不因工具而改口径：引入工具不降低证据标准。
+
+### 配置位置
+
+- \`C:\\Users\\Administrator\\.dsh\\profiles\\desktop\\cordis.patch.yml\` **顶层的 \`- insert:\` 列表**，
+  条目 \`id: mcp-rea\`，\`name: '@deepseek-ai/dsh-mcp-client'\`，\`serverName: rea\`
+- \`failOnStartupError: false\` —— 外部工具缺失不让整个军团挂载失败
+- \`toolCallTimeoutMs: 600000\` —— 反编译类长任务，默认超时会误杀
+
+> ⚠️ **mcp-rea 不能写在 preset 的 \`plugins\` 里**（曾经如此，结果永不激活，且完全静默）。
+> \`@deepseek-ai/dsh-mcp-client\` 注册 \`tools\` 服务，在 preset 的 realm 里会被
+> \`dsh-agent-preset-registry\` 的 \`mountPreset()\` 判为泄漏到 root realm，抛出
+> \`Preset services require isolate realms: tools\`，导致**整份 preset 挂载被拒**；
+> 失败只走 \`logger.warn\`，所以症状是「插件已配置却从不出现」。
+> 必须挂在 profile patch 顶层（同机 \`web\` profile 的 \`mcp-playwright\` 用同一插件挂顶层，工作正常）。
+`,
+};
+
 function processDir(dir, kind) {
   const names = kind === 'expert'
     ? [...roles.keys()].map((b) => `wuji-expert-${b}`)
     : deleg.leader_family_ids.map((f) => `wuji-leader-${f.replace(/^lead\./, '')}`);
-
   for (const name of names) {
     const p = join(dir, name, 'SKILL.md');
     if (!existsSync(p)) { results.missing++; continue; }
@@ -416,7 +475,9 @@ function processDir(dir, kind) {
       body = renderLeaderBody(name, parsed.fm, deleg.recipes, deleg);
     }
 
-    const next = head + body + '\n';
+    // 附加节：专家专属、源数据里没有的内容，必须走 ADDENDA 才会被保留
+    const addendum = ADDENDA[name] ?? '';
+    const next = head + body + (addendum || '') + '\n';
     if (next === text) { results.unchanged++; continue; }
     results.changed++;
     diffs.push(`${name}: ${text.length} → ${next.length} 字符`);

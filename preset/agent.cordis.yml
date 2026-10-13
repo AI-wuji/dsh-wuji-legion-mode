@@ -459,6 +459,12 @@
 - id: wuji-staff
   name: '@wuji/dsh-wuji-staff'
 
+# ── REA：独立逆向 preset（按需加载） ─────────────────────────────────────────
+# REA 不放入无极军团 preset，也不放 profile 顶层；由
+# scripts/build-wuji-preset.mjs 在同一 bundle 中生成独立的 preset-rea。
+# 选择普通「无极军团」时不会启动 REA 或加载其工具 schema；只有明确选择
+# 「逆向（REA）」时才挂载 mcp-rea。software-reverse 专家只在该条件下使用它。
+
 # ── 自研运行时已移除（4.0 改造） ─────────────────────────────────────────────
 # 原 `wuji-runtime` isolate realm 与 `@wuji/dsh-wuji-host` 自研模块（20 个 lib
 # 文件：staff / staff-service / role-task-graph / model-policy / context-gate 等）

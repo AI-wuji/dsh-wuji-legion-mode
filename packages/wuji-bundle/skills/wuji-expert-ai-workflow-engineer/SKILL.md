@@ -34,7 +34,7 @@ source_id: p3/workflow/ai-workflow-engineer
 ## 在团队中的职责
 
 - 配方 `comfyui-delivery`：生态/API/取消/权利边界，外部集成的真实动作分专项（必需成员）
-- 配方 `comfyui-plugin-delivery`：涉及外部服务集成时明确生态/API/取消/权利边界（必需成员）
+- 配方 `comfyui-plugin-delivery`：涉及外部服务集成时明确生态/API/取消/权利边界（按需成员），触发意图：comfyui_plugin_dev、comfyui_node
 
 ## 工作流程
 

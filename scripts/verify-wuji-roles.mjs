@@ -55,11 +55,18 @@ for (const dir of entries) {
     missingSkillMd += 1;
     console.log(`       ${dir} 缺少 SKILL.md`);
   }
-  // 检查是否有子目录（会造成发现落空或结构混乱）
+  // 角色发现仍要求 SKILL.md 位于第一层；少数外部专家允许携带 bin 等
+  // 支撑资产目录，但支撑目录中不能再出现第二个 SKILL.md。
   for (const sub of readdirSync(join(SKILLS, dir))) {
-    if (statSync(join(SKILLS, dir, sub)).isDirectory()) {
+    const subPath = join(SKILLS, dir, sub);
+    if (!statSync(subPath).isDirectory()) continue;
+    const allowedPayload = dir === 'wuji-expert-model-dedup' && sub === 'bin';
+    if (!allowedPayload) {
       nested += 1;
       console.log(`       ${dir}/${sub} 是子目录 —— 角色文件不应嵌套`);
+    } else if (readdirSync(subPath).some((entry) => entry.toLowerCase() === 'skill.md')) {
+      nested += 1;
+      console.log(`       ${dir}/${sub} 含嵌套 SKILL.md —— 支撑目录不能冒充角色`);
     }
   }
 }

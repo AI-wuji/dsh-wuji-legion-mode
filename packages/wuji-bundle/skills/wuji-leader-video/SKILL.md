@@ -53,6 +53,7 @@ recipes: [video-production-delivery, video-studio-delivery, video-post-productio
     - `wuji-expert-visual-storyboard`（触发意图：visual_storyboard） — 动作/场景/时点/运镜与cue有依赖
     - `wuji-expert-art-director`（触发意图：style_direction、creative_direction） — 审美方向与资产验收具体，权限事实不变
     - `wuji-expert-media-quality-review`（触发意图：media_quality_review） — 实际解析/播放/版本/声画/专业审查
+    - `wuji-expert-video-prompt-architect`（必需） — 视频提示词架构师：负责本配方中该环节的专业设计与产物回交
   - 验收默认：story-and-shot-scope、rights-and-source-lock、timeline-or-known-gap
 - **`video-studio-delivery`**（studio_video）
   - 承接：组织系列化视频前期、创作方向、分镜和制作计划
@@ -62,6 +63,8 @@ recipes: [video-production-delivery, video-studio-delivery, video-post-productio
     - `wuji-expert-screenwriter`（触发意图：scriptwriting） — 原意/角色/视角/情节因果保全
     - `wuji-expert-visual-storyboard`（触发意图：visual_storyboard） — 动作/场景/时点/运镜与cue有依赖
     - `wuji-expert-art-director`（触发意图：style_direction、creative_direction） — 审美方向与资产验收具体，权限事实不变
+    - `wuji-expert-storyboard-director`（必需） — 分镜导演：负责本配方中该环节的专业设计与产物回交
+    - `wuji-expert-visual-asset-designer`（必需） — 视觉资产设计师：负责本配方中该环节的专业设计与产物回交
   - 验收默认：series-bible-or-brief、creative-scope-locked、production-handoff
 - **`video-post-production`**（post_production）
   - 承接：组织素材、时间线、字幕、调色、导出和交付检查
@@ -69,6 +72,8 @@ recipes: [video-production-delivery, video-studio-delivery, video-post-productio
     - `wuji-expert-post-production`（必需） — 源采用/时间单位/转场/实际导出及工程
     - `wuji-expert-media-quality-review`（触发意图：media_quality_review、export_qa） — 实际解析/播放/版本/声画/专业审查
     - `wuji-expert-visual-storyboard`（触发意图：visual_storyboard） — 动作/场景/时点/运镜与cue有依赖
+    - `wuji-expert-soundstage-architect`（必需） — 声音设计与声场架构师：负责本配方中该环节的专业设计与产物回交
+    - `wuji-expert-video-editing-architect`（必需） — 视频剪辑架构师：负责本配方中该环节的专业设计与产物回交
   - 验收默认：source-assets-locked、timeline-and-export-scope、delivery-review
 
 ## 输出

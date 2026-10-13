@@ -43,7 +43,9 @@ const expect = (cond, msg) => {
 };
 
 expect(Array.isArray(doc), '顶层必须是数组');
-expect(doc?.length === 1, `顶层应只有 1 个元素，实际 ${doc?.length}`);
+// 顶层是两个独立 agent preset：[0] 无极军团，[1] 逆向（REA）。
+// REA 不得出现在 profile 顶层，否则该 profile 的所有会话都会加载它。
+expect(doc?.length === 2, `顶层应有 2 个元素（wuji + rea presets），实际 ${doc?.length}`);
 
 const insert = doc?.[0]?.insert;
 expect(Array.isArray(insert), '第 1 个元素必须有 insert 数组');
@@ -71,6 +73,21 @@ for (const p of plugins ?? []) {
   expect(!ids.has(p?.id), `插件 id 重复: ${p?.id}`);
   ids.add(p?.id);
 }
+
+// 第二个 preset 是隔离的逆向模式；mcp-rea 只能出现在它的 plugins 中。
+const reaInsert = doc?.[1]?.insert ?? [];
+expect(Array.isArray(doc?.[1]?.insert), '第 2 个元素必须有 insert 数组');
+expect(reaInsert.length === 1, `REA preset insert 应只有 1 行，实际 ${reaInsert.length}`);
+const reaPreset = reaInsert[0];
+expect(reaPreset?.id === 'preset-rea', `第 2 个 insert 行的 id 应为 preset-rea，实际 ${reaPreset?.id}`);
+expect(reaPreset?.name === '@deepseek-ai/dsh-agent-preset', `REA preset 应使用 dsh-agent-preset，实际 ${reaPreset?.name}`);
+expect(reaPreset?.config?.id === 'rea', `REA preset config.id 应为 rea，实际 ${reaPreset?.config?.id}`);
+const reaPlugins = reaPreset?.config?.plugins ?? [];
+expect(Array.isArray(reaPlugins) && reaPlugins.length > 0, 'REA preset plugins 必须是非空数组');
+const reaMcp = reaPlugins.find((p) => p?.id === 'mcp-rea');
+expect(Boolean(reaMcp), 'REA preset 必须包含 mcp-rea');
+expect(reaMcp?.name === '@deepseek-ai/dsh-mcp-client', `mcp-rea 应使用 dsh-mcp-client，实际 ${reaMcp?.name}`);
+expect(!doc?.some((entry) => (entry?.insert ?? []).some((p) => p?.id === 'mcp-rea' && p !== reaMcp)), 'mcp-rea 不得出现在 profile 顶层');
 
 // 插件行会嵌在 cordis:group 的 config 里（如 delegation / compaction 分组），
 // 所以必须递归展开后再找，不能只扫顶层。

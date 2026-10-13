@@ -33,7 +33,7 @@ source_id: p3/leaf/comfyui-python-node
 
 ## 在团队中的职责
 
-- 配方 `comfyui-delivery`：实现节点后端：真实注册、输入输出、错误、数值、取消（必需成员）
+- 配方 `comfyui-delivery`：实现节点后端：真实注册、输入输出、错误、数值、取消（按需成员），触发意图：comfyui_node
 - 配方 `comfyui-plugin-delivery`：实现节点业务逻辑：真实注册、输入输出、错误、数值、取消（必需成员）
 
 ## 工作流程

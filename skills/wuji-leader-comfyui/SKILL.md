@@ -48,16 +48,16 @@ recipes: [comfyui-delivery, comfyui-plugin-research, comfyui-plugin-delivery]
   - 承接：组织 ComfyUI 插件的检索、对标、规范、实现、双平台部署与验收
   - 成员：
     - `wuji-expert-ai-workflow-engineer`（必需） — 生态/API/取消/权利边界，外部集成的真实动作分专项
-    - `wuji-expert-comfyui-reverse`（必需） — 解析既有节点/插件的注册入口、张量类型、错误与数据流
-    - `wuji-expert-comfyui-workflow`（必需） — 搭建与解析工作流，保证 UI/API/图数据与执行依赖一致
-    - `wuji-expert-comfyui-python-node`（必需） — 实现节点后端：真实注册、输入输出、错误、数值、取消
-    - `wuji-expert-comfyui-native-extension`（必需） — 仅在有实测性能缺口时引入原生扩展，必留 Python 回退
-    - `wuji-expert-comfyui-spec-ecosystem`（必需） — 提供 ComfyUI 规范、官方节点与整合包事实底座
-    - `wuji-expert-comfyui-frontend-backend`（必需） — 前后端实现、v2/v3 双兼容、中文界面 i18n
-    - `wuji-expert-comfyui-deployment`（必需） — Windows 本地与 Linux 服务器双平台部署并跑通
-    - `wuji-expert-comfyui-verification-diagnosis`（必需） — 真实用例验证与根因诊断，出证据不改代码
-    - `wuji-expert-comfyui-distillation`（必需） — 复刻融合时比较两套行为，保证单一新实现且保留专业差异
-    - `wuji-expert-comfyui-packaging`（必需） — 精确依赖、许可证、干净环境与目标注册
+    - `wuji-expert-comfyui-reverse`（触发意图：comfyui_analysis、comfyui_fusion） — 解析既有节点/插件的注册入口、张量类型、错误与数据流
+    - `wuji-expert-comfyui-workflow`（触发意图：comfyui_workflow） — 搭建与解析工作流，保证 UI/API/图数据与执行依赖一致
+    - `wuji-expert-comfyui-python-node`（触发意图：comfyui_node） — 实现节点后端：真实注册、输入输出、错误、数值、取消
+    - `wuji-expert-comfyui-native-extension`（触发意图：comfyui_native_extension、measured_performance_gap） — 仅在有实测性能缺口时引入原生扩展，必留 Python 回退
+    - `wuji-expert-comfyui-spec-ecosystem`（触发意图：comfyui_spec_research） — 提供 ComfyUI 规范、官方节点与整合包事实底座
+    - `wuji-expert-comfyui-frontend-backend`（触发意图：comfyui_frontend、comfyui_i18n、comfyui_compat） — 前后端实现、v2/v3 双兼容、中文界面 i18n
+    - `wuji-expert-comfyui-deployment`（触发意图：comfyui_deployment） — Windows 本地与 Linux 服务器双平台部署并跑通
+    - `wuji-expert-comfyui-verification-diagnosis`（触发意图：comfyui_verification、comfyui_diagnosis） — 真实用例验证与根因诊断，出证据不改代码
+    - `wuji-expert-comfyui-distillation`（触发意图：comfyui_fusion） — 复刻融合时比较两套行为，保证单一新实现且保留专业差异
+    - `wuji-expert-comfyui-packaging`（触发意图：comfyui_packaging） — 精确依赖、许可证、干净环境与目标注册
   - 验收默认：authorized-inputs、actual-registry-or-known-gap、workflow-and-runtime-evidence、dual-platform-evidence、schema-compat-evidence
 - **`comfyui-plugin-research`**（comfyui、comfyui_plugin_research）
   - 承接：组织同类插件的检索与对标分析，产出可决策的取长补短结论
@@ -75,14 +75,14 @@ recipes: [comfyui-delivery, comfyui-plugin-research, comfyui-plugin-delivery]
     - `wuji-expert-comfyui-python-node`（必需） — 实现节点业务逻辑：真实注册、输入输出、错误、数值、取消
     - `wuji-expert-comfyui-deployment`（必需） — Windows 与 Linux 双平台部署并各自跑通，出双平台证据
     - `wuji-expert-comfyui-verification-diagnosis`（必需） — 真实用例验证与根因诊断，出证据不改代码
-    - `wuji-expert-comfyui-workflow`（必需） — 搭建/解析测试工作流，保证图数据与执行依赖一致
-    - `wuji-expert-comfyui-reverse`（必需） — 需要解析既有插件实现时提供行为规格
-    - `wuji-expert-comfyui-distillation`（必需） — 需要复刻或融合既有节点时保证单一新实现并保留专业差异
-    - `wuji-expert-comfyui-native-extension`（必需） — 仅在有实测性能缺口时引入原生扩展，必留 Python 回退
-    - `wuji-expert-comfyui-packaging`（必需） — 需要发布时处理依赖、许可证、干净环境与目标注册
-    - `wuji-expert-ai-workflow-engineer`（必需） — 涉及外部服务集成时明确生态/API/取消/权利边界
+    - `wuji-expert-comfyui-workflow`（触发意图：comfyui_plugin_dev、comfyui_node） — 搭建/解析测试工作流，保证图数据与执行依赖一致
+    - `wuji-expert-comfyui-reverse`（触发意图：comfyui_plugin_dev、comfyui_compat） — 需要解析既有插件实现时提供行为规格
+    - `wuji-expert-comfyui-distillation`（触发意图：comfyui_compat） — 需要复刻或融合既有节点时保证单一新实现并保留专业差异
+    - `wuji-expert-comfyui-native-extension`（触发意图：comfyui_native_extension、measured_performance_gap） — 仅在有实测性能缺口时引入原生扩展，必留 Python 回退
+    - `wuji-expert-comfyui-packaging`（触发意图：comfyui_packaging、comfyui_deployment） — 需要发布时处理依赖、许可证、干净环境与目标注册
+    - `wuji-expert-ai-workflow-engineer`（触发意图：comfyui_plugin_dev、comfyui_node） — 涉及外部服务集成时明确生态/API/取消/权利边界
     - `wuji-expert-objective-critic`（必需） — 交付前独立第三方评审，主动找出遗漏与自我迎合（克隆实例）
-    - `wuji-expert-scoring-expert`（必需） — 需要量化验收档位时按技术维度打分（按需，克隆实例）
+    - `wuji-expert-scoring-expert`（触发意图：comfyui_verification） — 需要量化验收档位时按技术维度打分（按需，克隆实例）
   - 验收默认：authorized-inputs、dual-platform-evidence、schema-compat-evidence、i18n-without-behavior-change、actual-runtime-evidence
 
 ## 输出
